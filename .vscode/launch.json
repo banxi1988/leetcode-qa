@@ -5,10 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(lldb) Launch",
-            "type": "cppdbg",
+            "name": "GoLaunch",
+            "type": "go",
             "request": "launch",
-            "program": "enter program name, for example ${workspaceFolder}/a.out",
+            "program": "${file}",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
