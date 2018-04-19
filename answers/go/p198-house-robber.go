@@ -9,13 +9,6 @@ func max(a, b int) int {
 	return b
 }
 
-// RobOption is a type
-type RobOption struct {
-	Robbed           int
-	AvailableHourses []int
-	Pass             bool
-}
-
 func rob(nums []int) int {
 	numCount := len(nums)
 	if numCount == 0 {
