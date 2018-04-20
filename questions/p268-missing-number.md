@@ -28,3 +28,25 @@ func missingNumber(nums []int) int {
 	return len(nums)
 }
 ```
+
+关于 O(N) + O(1) 的算法的思考。
+
+如果不考虑溢出的话，首先对 0...N 求和。
+然后对 nums 求和，他们之间的差值就是缺失数。
+
+```go
+func missingNumber(nums []int) int {
+	n := len(nums)
+	sumn := n * (n + 1) / 2
+	sum := 0
+	for i := 0; i < n; i++ {
+		sum += nums[i]
+	}
+	return sumn - sum
+}
+
+```
+
+如果考虑溢出的话就不能使用求和的方式。
+
+另一种办法是考虑使用位运算。
