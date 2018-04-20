@@ -13,7 +13,7 @@ func missingNumber_v1(nums []int) int {
 	return len(nums)
 }
 
-func missingNumber_v2(nums []int) int {
+func missingNumber(nums []int) int {
 	n := len(nums)
 	sumn := n * (n + 1) / 2
 	sum := 0
@@ -21,15 +21,6 @@ func missingNumber_v2(nums []int) int {
 		sum += nums[i]
 	}
 	return sumn - sum
-}
-
-func missingNumber(nums []int) int {
-	num := 0
-	for i := 0; i < len(nums); i++ {
-		num ^= ((i + 1) ^ nums[i])
-	}
-	num ^= (len(nums) + 1)
-	return num
 }
 
 func main() {
