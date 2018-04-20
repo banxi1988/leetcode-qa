@@ -21,7 +21,7 @@ func isPalindrome(head *ListNode) bool {
 			slowNode = slowNode.Next
 		}
 	}
-	// 2) 利用快慢指针反转后半部分链表
+	// 2) 反转后半部分链表
 	for slowNode.Next != fastNode {
 		tmpNode := slowNode.Next
 		slowNode.Next = tmpNode.Next
