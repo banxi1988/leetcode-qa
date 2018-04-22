@@ -13,12 +13,14 @@ func isPowerOfThree(n int) bool {
 	if n%3 != 0 {
 		return false
 	}
-	num := 3
-	for num < n {
-		num *= 3
-	}
-	return n == num
-
+	log3 := math.Log10(float64(n)) / math.Log10(float64(3))
+	log3if := float64(int(log3))
+	epsilon := math.Nextafter(1.0, 2.0) - 1.0
+	diff := log3 - log3if
+	fmt.Println(n, log3, log3if, diff, epsilon)
+	return diff <= epsilon*100
+	// 3.0000000000000004 3   -4.440892098500626e-16
+	// return log3 == log3if
 }
 
 func main() {
@@ -31,5 +33,5 @@ func main() {
 	fmt.Println("true -> ", isPowerOfThree(81))
 	fmt.Println("false -> ", isPowerOfThree(240))
 	fmt.Println("true -> ", isPowerOfThree(243))
-	fmt.Println(3^9, 3^27, 3^81, 3^243, math.Log(81))
+	fmt.Println("true -> ", isPowerOfThree(4782969))
 }
