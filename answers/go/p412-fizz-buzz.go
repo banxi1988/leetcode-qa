@@ -2,25 +2,30 @@ package main
 
 import "fmt"
 import "strconv"
+import "time"
 
 func fizzBuzz(n int) []string {
-	strs := []string{}
+	strs := make([]string, n)
 	for num := 1; num < n+1; num++ {
+		i := num - 1
 		is3 := num%3 == 0
 		is5 := num%5 == 0
 		if is3 && is5 {
-			strs = append(strs, "FizzBuzz")
+			strs[i] = "FizzBuzz"
 		} else if is3 {
-			strs = append(strs, "Fizz")
+			strs[i] = "Fizz"
 		} else if is5 {
-			strs = append(strs, "Buzz")
+			strs[i] = "Buzz"
 		} else {
-			strs = append(strs, strconv.Itoa(num))
+			strs[i] = strconv.Itoa(num)
 		}
 	}
 	return strs
 }
 
 func main() {
-	fmt.Println(fizzBuzz(15))
+	start := time.Now()
+	fmt.Println(fizzBuzz(200))
+	elapsed := time.Since(start)
+	fmt.Println("spend :", elapsed)
 }
