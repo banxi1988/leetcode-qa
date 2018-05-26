@@ -1,8 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 func canConstruct(ransomNote string, magazine string) bool {
+	if len(magazine) < len(ransomNote) {
+		return false
+	}
 	dict := make(map[rune]int)
 	for _, byt := range magazine {
 		count, _ := dict[byt]
@@ -19,8 +25,11 @@ func canConstruct(ransomNote string, magazine string) bool {
 }
 
 func main() {
+	start := time.Now()
 	fmt.Println(" false  -> ", canConstruct("a", "b"))
 	fmt.Println(" false  -> ", canConstruct("aa", "ab"))
 	fmt.Println(" true  -> ", canConstruct("aa", "aab"))
 	fmt.Println(" true ->", canConstruct("fffbfg", "effjfggbffjdgbjjhhdegh"))
+	elapsed := time.Since(start)
+	fmt.Println("elapsed: ", elapsed)
 }
