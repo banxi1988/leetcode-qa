@@ -17,9 +17,7 @@ func maxCount(m int, n int, ops [][]int) int {
 			minCols = col
 		}
 	}
-
 	return minRows * minCols
-
 }
 
 func main() {
