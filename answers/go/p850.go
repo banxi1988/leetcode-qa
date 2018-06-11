@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+
 func rectangleArea(rectangles [][]int) int {
 	area := 0
 	for i := 0; i < len(rectangles); i++ {
