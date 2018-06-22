@@ -21,23 +21,21 @@ func isValidSubstr(bytes []byte) bool {
 	return true
 }
 
+// 参考自： https://blog.csdn.net/dreamer841119554/article/details/79927780
 func countBinarySubstrings(s string) int {
 	count := 0
 	bytes := []byte(s)
-	byteCount := len(bytes)
-	maxSubLen := byteCount
-	// fmt.Println("==============")
-	for i := 0; i < byteCount-1; i++ {
-		maxSubLen = byteCount - i
-		for subLen := 2; subLen <= maxSubLen; subLen += 2 {
-			// fmt.Println(i, " ", subLen)
-			substr := bytes[i : i+subLen]
-			if isValidSubstr(substr) {
-				count++
-				// fmt.Println(string(substr), " ok")
-			} else {
-				// fmt.Println(string(substr), " not_ok")
-			}
+	preCharCount := 0
+	curCharCount := 1
+	for i := 1; i < len(bytes); i++ {
+		if bytes[i] == bytes[i-1] {
+			curCharCount++
+		} else {
+			preCharCount = curCharCount
+			curCharCount = 1
+		}
+		if preCharCount >= curCharCount {
+			count++
 		}
 	}
 	return count
