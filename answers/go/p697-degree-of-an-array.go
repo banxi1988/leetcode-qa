@@ -4,8 +4,8 @@ import (
 	"fmt"
 )
 
-// 求数组的度
-func degreeOfArray(nums []int) int {
+func findShortestSubArray(nums []int) int {
+	numCount := len(nums)
 	maxDegree := 0
 	degreeMap := make(map[int]int, len(nums))
 	for _, num := range nums {
@@ -16,23 +16,30 @@ func degreeOfArray(nums []int) int {
 			maxDegree = degree
 		}
 	}
-	return maxDegree
-}
-
-func findShortestSubArray(nums []int) int {
-	numCount := len(nums)
-	arrDegree := degreeOfArray(nums)
+	arrDegree := maxDegree
+	rcNums := []int{}
+	for num, degree := range degreeMap {
+		if degree == arrDegree {
+			rcNums = append(rcNums, num)
+		}
+	}
 	minSubLen := numCount
-	for i := 0; i < (numCount - arrDegree + 1); i++ {
-		for j := i + arrDegree; j <= numCount; j++ {
-			degree := degreeOfArray(nums[i:j])
-			if degree == arrDegree {
-				subLen := j - i
-				if subLen < minSubLen {
-					minSubLen = subLen
-				}
+	for _, target := range rcNums {
+		startIndex := 0
+		for ; startIndex < numCount; startIndex++ {
+			if nums[startIndex] == target {
 				break
 			}
+		}
+		endIndex := numCount - 1
+		for ; endIndex > startIndex; endIndex-- {
+			if nums[endIndex] == target {
+				break
+			}
+		}
+		subLen := endIndex - startIndex + 1
+		if subLen < minSubLen {
+			minSubLen = subLen
 		}
 	}
 	return minSubLen
