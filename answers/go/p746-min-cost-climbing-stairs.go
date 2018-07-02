@@ -12,16 +12,19 @@ func mini(a, b int) int {
 }
 
 func minCostClimbingStairs(costs []int) int {
+	// 参考自: https://unclegem.cn/2018/04/17/Leetcode%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-746-%E4%BD%BF%E7%94%A8%E6%9C%80%E5%B0%8F%E8%8A%B1%E8%B4%B9%E7%88%AC%E6%A5%BC%E6%A2%AF/
 	costsCount := len(costs)
-	if costsCount == 1 {
-		return 0
-	} else if costsCount == 2 {
-		return mini(costs[0], costs[1])
-	} else {
-		choice1Costs := costs[0] + minCostClimbingStairs(costs[1:])
-		choice2Costs := costs[1] + minCostClimbingStairs(costs[2:])
-		return mini(choice1Costs, choice2Costs)
+	dp := make([]int, costsCount+1)
+	dp[0] = costs[0]
+	dp[1] = costs[1]
+	for i := 2; i <= costsCount; i++ {
+		cost := 0
+		if i < costsCount {
+			cost = costs[i]
+		}
+		dp[i] = mini(dp[i-1], dp[i-2]) + cost
 	}
+	return dp[costsCount]
 }
 
 func main() {
