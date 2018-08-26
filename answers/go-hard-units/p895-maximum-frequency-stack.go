@@ -1,54 +1,58 @@
 package ghard
 
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
 type FreqStack struct {
 	/// 数字出现次数 map
 	numCountMap map[int]int
-	/// 数字栈
-	numStack []int
+	/// 数字
+	freqNumsMap map[int][]int
+	/// 最常出现的数字
+	maxCount int
 }
 
 func Constructor() FreqStack {
-	return FreqStack{numCountMap: make(map[int]int), numStack: []int{}}
+	return FreqStack{numCountMap: make(map[int]int), freqNumsMap: make(map[int][]int)}
 }
 
 func (this *FreqStack) Push(x int) {
-	this.numStack = append(this.numStack, x)
 	count, _ := this.numCountMap[x]
-	this.numCountMap[x] = count + 1
-}
-
-func contains(slice []int, x int) bool {
-	for _, num := range slice {
-		if num == x {
-			return true
-		}
-	}
-	return false
+	count++
+	this.numCountMap[x] = count
+	freqNums, _ := this.freqNumsMap[count]
+	freqNums = append(freqNums, x)
+	this.freqNumsMap[count] = freqNums
+	this.maxCount = max(count, this.maxCount)
 }
 
 func (this *FreqStack) Pop() int {
-	maxCount := 0
-	for _, count := range this.numCountMap {
-		if count > maxCount {
-			maxCount = count
+	maxCount := this.maxCount
+	maxFreqNums := this.freqNumsMap[maxCount]
+	freqNumCount := len(maxFreqNums)
+	x := maxFreqNums[freqNumCount-1]
+	maxFreqNums = maxFreqNums[0 : freqNumCount-1]
+	if len(maxFreqNums) > 0 {
+		this.freqNumsMap[maxCount] = maxFreqNums
+	} else {
+		// 如此此频率下数字没有了，
+		// 1) 删除此映射
+		// 2) 查找下一个 maxCount
+		delete(this.freqNumsMap, maxCount)
+		nextMaxCount := maxCount - 1
+		for len(this.freqNumsMap[nextMaxCount]) < 1 && nextMaxCount > 0 {
+			nextMaxCount--
 		}
+		this.maxCount = nextMaxCount
+
 	}
-	maxCountNums := []int{}
-	for num, count := range this.numCountMap {
-		if count == maxCount {
-			maxCountNums = append(maxCountNums, num)
-		}
-	}
-	for i := len(this.numStack) - 1; i > -1; i-- {
-		num := this.numStack[i]
-		if contains(maxCountNums, num) {
-			this.numStack = append(this.numStack[:i], this.numStack[i+1:]...)
-			count, _ := this.numCountMap[num]
-			this.numCountMap[num] = count - 1
-			return num
-		}
-	}
-	return -1
+	count, _ := this.numCountMap[x]
+	this.numCountMap[x] = count - 1
+	return x
 }
 
 /**
