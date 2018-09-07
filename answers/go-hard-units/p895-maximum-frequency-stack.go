@@ -12,7 +12,7 @@ type FreqStack struct {
 	numCountMap map[int]int
 	/// 数字
 	freqNumsMap map[int][]int
-	/// 最常出现的数字
+	/// 最常出现的数字 
 	maxCount int
 }
 
@@ -39,7 +39,7 @@ func (this *FreqStack) Pop() int {
 	if len(maxFreqNums) > 0 {
 		this.freqNumsMap[maxCount] = maxFreqNums
 	} else {
-		// 如此此频率下数字没有了，
+		// 如果此频率下数字没有了，
 		// 1) 删除此映射
 		// 2) 查找下一个 maxCount
 		delete(this.freqNumsMap, maxCount)

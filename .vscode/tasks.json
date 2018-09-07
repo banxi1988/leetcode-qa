@@ -4,13 +4,12 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
+            "label": "build_current_file",
             "type": "shell",
-            "command": "msbuild",
+            "command": "clang++",
             "args": [
-                // Ask msbuild to generate full paths for file names.
-                "/property:GenerateFullPaths=true",
-                "/t:build"
+                "-g",
+                "${file}"
             ],
             "group": "build",
             "presentation": {

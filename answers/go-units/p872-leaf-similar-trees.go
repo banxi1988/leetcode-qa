@@ -4,12 +4,6 @@ import (
 	"fmt"
 )
 
-type TreeNode struct {
-	Val   int
-	Left  *TreeNode
-	Right *TreeNode
-}
-
 func leafsOfTree(root *TreeNode) []int {
 	leafs := []int{}
 	if root == nil {

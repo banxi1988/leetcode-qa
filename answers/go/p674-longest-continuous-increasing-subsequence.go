@@ -28,6 +28,7 @@ func findLengthOfLCIS(nums []int) int {
 	}
 	return maxLen
 }
+
 func main() {
 	fmt.Println("3 -> ", findLengthOfLCIS([]int{1, 3, 5, 4, 7}))
 	fmt.Println("1 -> ", findLengthOfLCIS([]int{2, 2, 2, 2, 2}))

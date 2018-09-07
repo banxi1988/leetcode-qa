@@ -7,7 +7,20 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+
+
 func Test_shortestToChar(t *testing.T) {
+	type Person struct{
+		Name *string
+		Age int
+	}
+	name := "banxi";
+	person := Person{&name, 18}
+	fmt.Println("name:",person.Name)
+	if person.Name != nil{
+		fmt.Println("name:", *person.Name)
+	}
+
 	type args struct {
 		S string
 		C byte

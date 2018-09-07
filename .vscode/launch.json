@@ -5,6 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "(lldb) Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${fileWithoutSuffix}.out",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "lldb"
+        },
+        {
             "name": "GoLaunch",
             "type": "go",
             "request": "launch",
@@ -15,6 +27,7 @@
             "environment": [],
             "externalConsole": true,
             "MIMode": "lldb"
-        }
+        },
+
     ]
 }

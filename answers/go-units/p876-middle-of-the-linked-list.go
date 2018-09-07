@@ -1,10 +1,6 @@
 package leetcode
 
-// ListNode  单链表
-type ListNode struct {
-	Val  int
-	Next *ListNode
-}
+
 
 func lengthOf(head *ListNode) int {
 	p := head
