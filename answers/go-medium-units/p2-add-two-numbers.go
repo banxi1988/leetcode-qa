@@ -1,25 +1,6 @@
 package gmedium
 
-func listNodeToSlice(head *ListNode) []int {
-	cur := head
-	nums := []int{}
-	for cur != nil {
-		nums = append(nums, cur.Val)
-		cur = cur.Next
-	}
-	return nums
-}
 
-func sliceToListNode(nums []int) *ListNode {
-	head := &ListNode{Val: nums[0]}
-	cur := head
-	for i := 1; i < len(nums); i++ {
-		next := &ListNode{Val: nums[i]}
-		cur.Next = next
-		cur = next
-	}
-	return head
-}
 
 func numsToNum(nums []int) int {
 	numCount := len(nums)
