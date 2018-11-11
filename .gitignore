@@ -31,3 +31,5 @@
 *.out
 *.app
 debug
+__pycache__
+.pytest_cache

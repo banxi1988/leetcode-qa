@@ -1,0 +1,7 @@
+{
+  "python.formatting.provider": "black",
+  "python.unitTest.pyTestArgs": ["answers/python3"],
+  "python.unitTest.unittestEnabled": false,
+  "python.unitTest.nosetestsEnabled": false,
+  "python.unitTest.pyTestEnabled": true
+}
