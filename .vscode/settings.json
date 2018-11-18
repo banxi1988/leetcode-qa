@@ -3,5 +3,7 @@
   "python.unitTest.pyTestArgs": ["answers/python3"],
   "python.unitTest.unittestEnabled": false,
   "python.unitTest.nosetestsEnabled": false,
-  "python.unitTest.pyTestEnabled": true
+  "python.unitTest.pyTestEnabled": true,
+  "python.pythonPath": "/Users/banxi/.pyenv/versions/3.7.1/bin/python",
+  "python.linting.pylintEnabled": false
 }
