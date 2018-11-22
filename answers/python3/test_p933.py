@@ -36,10 +36,7 @@ class RecentCounter:
 
 def test_RecentCounter():
     # for i in range(100):
-    import cProfile, pstats, io
 
-    pr = cProfile.Profile()
-    pr.enable()
     obj = RecentCounter()
     assert obj.ping(642) == 1
     assert obj.ping(1849) == 2
@@ -52,9 +49,3 @@ def test_RecentCounter():
     assert obj2.ping(100) == 2
     assert obj2.ping(3001) == 3
     assert obj2.ping(3002) == 3
-
-    pr.disable()
-    s = io.StringIO()
-    ps = pstats.Stats(pr, stream=s).sort_stats("cumulative")
-    ps.print_stats()
-    print(s.getvalue())

@@ -1,3 +1,4 @@
+# coding: utf-8
 class Solution:
     def reorderLogFiles(self, logs):
         """
@@ -25,7 +26,9 @@ class Solution:
 
 
 def test_wc110_p1():
-    input1 = ["a1 9 2 3 1", "g1 act car", "zo4 4 7", "ab1 off key dog", "a8 act zoo"]
+    input1 = [
+        "a1 9 2 3 1", "g1 act car", "zo4 4 7", "ab1 off key dog", "a8 act zoo"
+    ]
     expected_output1 = [
         "g1 act car",
         "a8 act zoo",

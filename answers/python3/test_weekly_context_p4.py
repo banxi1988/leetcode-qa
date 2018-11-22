@@ -1,3 +1,4 @@
+# coding: utf-8
 def test_wc110_p4():
     pass
 
