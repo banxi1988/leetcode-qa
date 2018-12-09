@@ -1,5 +1,4 @@
 # coding: utf-8
-import math
 
 __author__ = '代码会说话'
 
@@ -22,23 +21,22 @@ LeetCode 338. 比特位计数 题解 by @代码会说话
 要求算法的空间复杂度为O(n)。
 你能进一步完善解法吗？要求在C++或任何其他语言中不使用任何内置函数（如 C++ 中的 __builtin_popcount）来执行此操作。
 
-[0,1,1,2,1,2]
 0 -> 0000  -> 0
 1 -> 0001  -> 1
-2 -> 0010  -> 1
-3 -> 0011  -> 2
+2 -> 0010  -> 1 
+3 -> 0011  -> 2  bits[3] = bits[2] + 1 = 2
 4 -> 0100  -> 1
-5 -> 0101  -> 2
-6 -> 0110  -> 2
-7 -> 0111  -> 3
-8 -> 1000  -> 1
-9 -> 1001  -> 2
-10 -> 1010  -> 2
+5 -> 0101  -> 2  bits[4] + 1 = 2
+6 -> 0110  -> 2  bits[4] + bits[2] = 2
+7 -> 0111  -> 3  bits[4] + bits[3] = 3
+8 -> 1000  -> 1  bits[8] = 1
+9 -> 1001  -> 2  bits[8] + bits[1] = 2
+10 -> 1010  -> 2 bits[8] + bits[2] = 2
 11 -> 1011  -> 3
 12 -> 1100  -> 2
 13 -> 1101  -> 3
 14 -> 1110  -> 3
-15 -> 1111  -> 4
+15 -> 1111  -> 4 bits[8] + bits[7] = 1 + 3 = 4
 16 -> 10000  -> 1
 17 -> 10001  -> 2
 
@@ -52,20 +50,19 @@ class Solution:
             return  [0]
         if num == 1:
             return  [0,1]
-        bits = [0] * (num + 1)
+        base = 2
+        bits = [0] * (num + 1) #  int [num+1];
         bits[1] = 1
         bits[2] = 1
-        base = 2
         cur_num = 3
         while cur_num <= num:
             next_base = base * 2
             cur_num = base + 1
-            while cur_num < next_base and cur_num <= num:
+            while cur_num <= num and cur_num < next_base:
                 bits[cur_num] = 1 + bits[cur_num - base]
                 cur_num+=1
             if next_base <= num:
                 bits[next_base] = 1
-
             base = next_base
         return bits
 
