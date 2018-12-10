@@ -26,19 +26,23 @@ from typing import  List
 
 class Solution:
   def triangleNumber(self, nums: List[int]) -> int:
-    count = len(nums)
-    if count < 3:
+    n = len(nums)
+    if n < 3:
       return 0
-    tri_count = 0
+    total = 0
     nums.sort()
-    for i in range(0, count -2):
+    # 1,2,3,4,5,6, 9
+    for i in range(n-1,1,-1):
+      hi = i -1
+      lo = 0
       numi = nums[i]
-      for j in range(i + 1, count -1):
-        numj = nums[j]
-        for k in range(j + 1, count):
-          if numi + numj > nums[k]:
-            tri_count+=1
-    return tri_count
+      while lo < hi:
+        if nums[hi] + nums[lo]> numi:
+          total += hi - lo
+          hi -=1
+        else:
+          lo +=1
+    return total
 
 
 
