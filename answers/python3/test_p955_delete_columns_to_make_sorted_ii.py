@@ -1,8 +1,10 @@
 # coding: utf-8
 
-__author__ = 'banxi'
+__author__ = '代码会说话'
 
 """
+LeetCode 955. 删列造序 || 题解 by 代码会说话
+
 给定由 N 个小写字母字符串组成的数组 A，其中每个字符串长度相等。
 
 选取一个删除索引序列，对于 A 中的每个字符串，删除对应每个索引处的字符。
@@ -40,41 +42,44 @@ A 的列已经是按字典序排列了，所以我们不需要删除任何东西
 
 1 <= A.length <= 100
 1 <= A[i].length <= 100
+
+cbc cb - c
+cac ca - c
+
 """
 
 from typing import  List
 class Solution:
-    def minDeletionSize(self, A:List[str]):
-        word_count = len(A)
-        word_len = len(A[0])
-        dict_words = [""] * word_count
-        for ci in range(0, word_len):
-            dict_words[0] += A[0][ci]
-            reverse_wi = -1
-            for wi in range(1, word_count):
-                dict_words[wi] += A[wi][ci]
-                cur = dict_words[wi]
-                pre = dict_words[wi -1]
-                if cur >= pre:
-                    continue
-                else:
-                    reverse_wi = wi
-                    break
-            if reverse_wi > 0:
-                for  i in range(0, reverse_wi + 1):
-                    dict_words[i] = dict_words[i][:-1]
+  def minDeletionSize(self, A:List[str]):
+    word_count = len(A)
+    word_len = len(A[0])
+    dict_words = [""] * word_count
+    for ci in range(0, word_len):
+      dict_words[0] += A[0][ci]
+      delete_to = -1
+      for wi in range(1, word_count):
+        dict_words[wi] += A[wi][ci]
+        cur = dict_words[wi]
+        pre = dict_words[wi -1]
+        if cur >= pre:
+          continue
+        else:
+          delete_to = wi
 
-        return word_len - len(dict_words[0])
+      for i in range(0, delete_to + 1):
+        dict_words[i] = dict_words[i][:-1]
+
+    return word_len - len(dict_words[0])
 
 
 
 
 def test():
-    s = Solution()
-    assert s.minDeletionSize(["jwkwdc","etukoz"]) == 2
-    assert s.minDeletionSize(["abx","agz","bgc","bfc"]) == 1
-    assert s.minDeletionSize(["xga","xfb","yfa"]) == 1
-    assert s.minDeletionSize(["xc","yb","za"]) == 0
-    assert s.minDeletionSize(["ca","bb","ac"]) == 1
-    assert s.minDeletionSize(["zyx","wvu","tsr"]) == 3
+  s = Solution()
+  assert s.minDeletionSize(["jwkwdc","etukoz"]) == 2
+  assert s.minDeletionSize(["abx","agz","bgc","bfc"]) == 1
+  assert s.minDeletionSize(["xga","xfb","yfa"]) == 1
+  assert s.minDeletionSize(["xc","yb","za"]) == 0
+  assert s.minDeletionSize(["ca","bb","ac"]) == 1
+  assert s.minDeletionSize(["zyx","wvu","tsr"]) == 3
 

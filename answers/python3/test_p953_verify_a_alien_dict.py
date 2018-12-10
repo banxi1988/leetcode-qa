@@ -1,9 +1,9 @@
 # coding: utf-8
 
-__author__ = 'banxi'
+__author__ = '代码会说话'
 
 """
-LeetCode 953. 验证外星语词典
+LeetCode 953. 验证外星语词典 by 代码会说话
 某种外星语也使用英文小写字母，但可能顺序 order 不同。字母表的顺序（order）是一些小写字母的排列。
 
 给定一组用外星语书写的单词 words，以及其字母表的顺序 order，只有当给定的单词在这种外星语中按字典序排列时，返回 true；否则，返回 false。
@@ -39,33 +39,34 @@ order.length == 26
 from typing import List
 
 class Solution:
-    def isAlienSorted(self, words:List[str], order:str) -> bool:
-        ch_to_order = dict((ch,index) for (index,ch) in enumerate(order))
-        prev_word_order = [-1] * 100
-        prev_word_len = 0
-        for word in words:
-            word_order = [-1] * 100
-            for i,ch in enumerate(word):
-                word_order[i] = ch_to_order[ch]
-            word_len = len(word)
-            for i in range(0,max(prev_word_len, word_len)):
-                cur_order = word_order[i]
-                prev_order = prev_word_order[i]
-                if cur_order > prev_order:
-                    break
-                elif cur_order == prev_order:
-                    continue
-                else:
-                    return False
-            prev_word_len = word_len
+  def isAlienSorted(self, words:List[str], order:str) -> bool:
+    ch_to_order = dict((ch,index) for (index,ch) in enumerate(order))
 
-            prev_word_order = word_order
+    pre_word_order = [-1] * 100
+    pre_word_len = 0
+    for word in words:
+      word_order = [-1] * 100
+      word_len = len(word)
+      for i,ch in enumerate(word):
+        word_order[i] = ch_to_order[ch]
 
-        return True
+      for i in range(max(word_len, pre_word_len)):
+         cur_order = word_order[i]
+         pre_order = pre_word_order[i]
+         if cur_order > pre_order:
+           break
+         elif cur_order == pre_order:
+           continue
+         else:
+           return False
+
+      pre_word_order = word_order
+      pre_word_len = word_len
+    return True
 
 
 def test():
-    s = Solution()
-    assert s.isAlienSorted(words = ["hello","leetcode"], order = "hlabcdefgijkmnopqrstuvwxyz") == True
-    assert s.isAlienSorted(words = ["word","world","row"], order = "worldabcefghijkmnpqstuvxyz") == False
-    assert s.isAlienSorted(words = ["apple","app"], order = "abcdefghijklmnopqrstuvwxyz") == False
+  s = Solution()
+  assert s.isAlienSorted(words = ["hello","leetcode"], order = "hlabcdefgijkmnopqrstuvwxyz") == True
+  assert s.isAlienSorted(words = ["word","world","row"], order = "worldabcefghijkmnpqstuvxyz") == False
+  assert s.isAlienSorted(words = ["apple","app"], order = "abcdefghijklmnopqrstuvwxyz") == False
