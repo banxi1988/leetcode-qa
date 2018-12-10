@@ -19,25 +19,32 @@ LeetCode 221. 最大正方形 题解 by 代码会说话
 输出: 4
 """
 
-from typing import  List
+from typing import  List,Union
 class Solution:
-  def maximalSquare(self, matrix: List[List[int]]) -> int:
+  def maximalSquare(self, matrix: List[List[Union[int,str]]]) -> int:
     rows = len(matrix)
+    if not rows:
+      return 0
     cols = len(matrix[0])
+    if not cols:
+      return  0
     max_area = 0
 
     def isSquare(row:int,col:int,size:int) -> bool:
+      #print("(%d,%d,%d)" % (row,col,size))
       if  (row + size) > rows or (col + size) > cols:
         return False
       for i in range(0,size):
         for j in range(0,size):
-          if matrix[row + i][col + j] != 1:
+          val = matrix[row + i][col + j]
+          if val != 1 and val != '1':
             return False
       return True
 
     for row in range(0, rows):
       for col in range(0,cols):
-        if matrix[row][col] != 1:
+        origin = matrix[row][col]
+        if origin!= 1 and origin != '1':
           continue
         size = 1
         is_square = True
@@ -53,6 +60,16 @@ class Solution:
 
 def test():
   s = Solution()
+  assert s.maximalSquare([]) == 0
+  assert s.maximalSquare([[]]) == 0
+  m12 = [
+    [1,0,1,0,0,0,0],
+    [1,0,1,1,1,1,1],
+    [1,1,1,1,1,1,1],
+    [1,0,0,1,1,1,0],
+  ]
+  assert s.maximalSquare(m12) == 9
+  return
   m4 = [
     [1,1,1],
     [1,1,0]
@@ -65,6 +82,22 @@ def test():
     [1,0,0,1,0],
   ]
   assert s.maximalSquare(m1) == 4
+
+  m11 = [
+    [1,0,1,0,0,0,0],
+    [1,0,1,1,1,1,1],
+    [1,1,1,1,1,1,1],
+    [1,0,0,1,0,0,0],
+  ]
+  assert s.maximalSquare(m11) == 4
+
+  m12 = [
+    [1,0,1,0,0,0,0],
+    [1,0,1,1,1,1,1],
+    [1,1,1,1,1,1,1],
+    [1,0,0,1,1,1,0],
+  ]
+  assert s.maximalSquare(m12) == 9
 
   m2 = [
     [1]
