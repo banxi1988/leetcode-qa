@@ -28,7 +28,7 @@ class Solution:
     cols = len(matrix[0])
     if not cols:
       return  0
-    max_area = 0
+    max_size = 0
 
     def isSquare(row:int,col:int,size:int) -> bool:
       #print("(%d,%d,%d)" % (row,col,size))
@@ -46,15 +46,13 @@ class Solution:
         origin = matrix[row][col]
         if origin!= 1 and origin != '1':
           continue
-        size = 1
-        is_square = True
+        size = max_size + 1
+        is_square = isSquare(row,col, size)
         while is_square:
-          area = size * size
-          if area > max_area:
-            max_area = area
+          max_size = size
           size += 1
           is_square = isSquare(row,col, size)
-    return max_area
+    return max_size * max_size
 
 
 
