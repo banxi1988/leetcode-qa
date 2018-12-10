@@ -16,11 +16,35 @@ LeetCode 221. 最大正方形 题解 by 代码会说话
 1 1 1 1 1
 1 0 0 1 0
 
+1 0 1 0 0
+2 0 2 1 1
+3 1 3 2 2
+4 0 0 3 0
 输出: 4
 """
 
-from typing import  List,Union
+from typing import  List,Union,Optional
 class Solution:
+  def findMaxSquare(self, row: List[int],pre_max_size:int) -> Optional[int]:
+    # 3 1 3 2 2
+    cur_size = pre_max_size
+    start_col = -1
+    cur_max_size = None
+    while cur_size < len(row):
+      cur_size += 1
+      for i, val in enumerate(row):
+        if val >= cur_size:
+          if start_col == -1:
+            start_col = i
+          if (i - start_col + 1) == cur_size:
+            cur_max_size = cur_size
+            break
+        else:
+          start_col = -1
+      if not cur_max_size:
+        break
+    return cur_max_size
+
   def maximalSquare(self, matrix: List[List[Union[int,str]]]) -> int:
     rows = len(matrix)
     if not rows:
@@ -29,37 +53,37 @@ class Solution:
     if not cols:
       return  0
     max_size = 0
+    grid = [[0 for _ in range(0,cols)] for _ in range(0,rows)]
+    for r in range(0,rows):
+      for c in range(0, cols):
+        grid[r][c] = int(matrix[r][c]) # 题目中数据是字符串
+    for r in range(1,rows):
+      for c in range(0, cols):
+        if grid[r][c] > 0:
+          grid[r][c] += grid[r-1][c]
 
-    def isSquare(row:int,col:int,size:int) -> bool:
-      #print("(%d,%d,%d)" % (row,col,size))
-      if  (row + size) > rows or (col + size) > cols:
-        return False
-      for i in range(0,size):
-        for j in range(0,size):
-          val = matrix[row + i][col + j]
-          if val != 1 and val != '1':
-            return False
-      return True
+    for row in grid:
+      cur_max_size = self.findMaxSquare(row, max_size)
+      if cur_max_size:
+        max_size = cur_max_size
 
-    for row in range(0, rows):
-      for col in range(0,cols):
-        origin = matrix[row][col]
-        if origin!= 1 and origin != '1':
-          continue
-        size = max_size + 1
-        is_square = isSquare(row,col, size)
-        while is_square:
-          max_size = size
-          size += 1
-          is_square = isSquare(row,col, size)
     return max_size * max_size
-
-
 
 def test():
   s = Solution()
   assert s.maximalSquare([]) == 0
   assert s.maximalSquare([[]]) == 0
+  me1 = [
+    ["1","0","1","1","0","1"],
+    ["1","1","1","1","1","1"],
+    ["0","1","1","0","1","1"],
+    ["1","1","1","0","1","0"],
+    ["0","1","1","1","1","1"],
+    ["1","1","0","1","1","1"]
+  ]
+
+  assert s.maximalSquare(me1) == 4
+
   m12 = [
     [1,0,1,0,0,0,0],
     [1,0,1,1,1,1,1],
@@ -67,7 +91,7 @@ def test():
     [1,0,0,1,1,1,0],
   ]
   assert s.maximalSquare(m12) == 9
-  return
+  # return
   m4 = [
     [1,1,1],
     [1,1,0]
@@ -80,6 +104,17 @@ def test():
     [1,0,0,1,0],
   ]
   assert s.maximalSquare(m1) == 4
+
+  me1 = [
+    ["1","0","1","1","0","1"],
+    ["1","1","1","1","1","1"],
+    ["0","1","1","0","1","1"],
+    ["1","1","1","0","1","0"],
+    ["0","1","1","1","1","1"],
+    ["1","1","0","1","1","1"]
+  ]
+
+  assert s.maximalSquare(me1) == 4
 
   m11 = [
     [1,0,1,0,0,0,0],
