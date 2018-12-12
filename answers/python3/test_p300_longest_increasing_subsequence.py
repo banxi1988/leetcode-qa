@@ -1,6 +1,5 @@
 # coding: utf-8
 
-
 __author__ = '代码会说话'
 
 """
@@ -22,24 +21,22 @@ from typing import List
 class Solution:
   def lengthOfLIS(self, nums:List[int]) -> bool:
     n = len(nums)
-    max_len = 0
-    for i in range(0,n):
-      prev_num = nums[i]
-      cur_len = 1
-      for j in range(i + 1,n):
-        cur_num = nums[j]
-        if cur_num > prev_num:
-          cur_len+=1
-          prev_num = cur_num
-      max_len = max(cur_len,max_len)
-
-    return max_len
-
-
+    def llis_from(prev:int,cur_pos:int):
+      if cur_pos == n:
+        return 0
+      taken = 0
+      cur = nums[cur_pos]
+      if cur > prev:
+        taken = 1 + llis_from(cur,cur_pos+1)
+      not_taken = llis_from(prev, cur_pos + 1)
+      return max(taken, not_taken)
+    import sys
+    return llis_from(-sys.maxsize -1,0)
 
 
 def test():
   s = Solution()
   assert s.lengthOfLIS([10,9,2,5,3,4]) == 3
+  assert s.lengthOfLIS([10,9,2,5,3,6,4,5]) == 4
   assert s.lengthOfLIS([10,9,2,5,3,7,101,18]) == 4
   assert s.lengthOfLIS([10,4,9,2,5,3,7,101,18]) == 4
