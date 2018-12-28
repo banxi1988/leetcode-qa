@@ -50,19 +50,25 @@ def reverseList(head:Optional[ListNode]):
 
 
 def reverseList2(head:Optional[ListNode]):
+  """ 数据结构链表(3)只用一个循环的反转链表方法解析 by 代码会说话"""
+  # 1,2,3
+  # start -> 1
+  # start ->2 -> 1
   if head is None or head.next is None:
     return head
-  prev = ListNode(0)
+
+  start = ListNode(0)
   p = head
-  # 1,2,3
-  # prev -> 1
-  # prev -> 2 -> 1
-  while p is not  None:
-    old_next = prev.next # 1
-    prev.next = p # prev->2
-    p = p.next #
-    prev.next.next = old_next
-  return prev.next
+  while p is not None:
+    old_start_next = start.next
+    start.next = p
+    p = p.next
+    start.next.next = old_start_next
+
+  return start.next
+
+
+
 
 
 def test_list_nodes():
