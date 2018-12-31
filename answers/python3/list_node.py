@@ -9,6 +9,14 @@ class ListNode:
     self.val = x
     self.next = None # type: ListNode
 
+  def __str__(self):
+    p = self.next
+    values = [self.val]
+    while p:
+      values.append(p.val)
+      p = p.next
+    return "->".join(map(str,values))
+
 def arrayToList(nums:List[int]) -> Optional[ListNode]:
   if not nums:
     return None
