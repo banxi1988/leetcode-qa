@@ -13,36 +13,6 @@ __author__ = '代码会说话'
 
 输入: -1->5->3->4->0
 输出: -1->0->3->4->5
-
-4->2->1->3
-2->4->1->3
-1->2->3->4
-
--1->5->3->4->0
--1->5->3->4->0
--1->4->3->5->0
-
-i,i+1,i+2,i+3
-
-1) 第一次比较
-2i vs 2i+1
-0 vs 1
-2 vs 3
-
-0,2,4,6
-1,3,5,7
-
-7,6,5,4,3,2
-6,7,4,5,2,3
-4,5
-
-4,5,6,7
-2i < 2i+1
-
-3i < 3i + 1
-i < i + 1
-
-
 """
 from list_node import  *
 
@@ -86,6 +56,10 @@ class Solution:
     return sll.head
 
   def merge(self,l1:ListNode, l2:ListNode):
+    if l1 is None:
+      return l2
+    if l2 is None:
+      return  l1
     p1 = l1
     p2 = l2
     start = ListNode(0)
@@ -97,8 +71,26 @@ class Solution:
       else:
         p.next = p2
         p2 = p2.next
+      p = p.next
     p.next = p2 if p2 else p1
     return start.next
+
+  def move_forward(self,head:ListNode, max_steps:int):
+    """ 向前走 max_steps 后返回指向的节点，返回节点不为空 """
+    # 2,3
+    p = head
+    i = 0
+    while i < max_steps and p.next:
+      i += 1
+      p = p.next
+    return p
+
+  def move_to_end(self,head:ListNode):
+    """ 移动到链表尾部 """
+    p = head
+    while p.next:
+      p = p.next
+    return p
 
 
 
@@ -107,50 +99,26 @@ class Solution:
       return head
     start = ListNode(0)
     start.next = head
-    # s 8,  3,  2, 1,6,4,7,5
-    # p p1, p2, p
     merge_size = 1
     while True:
       p = start.next
       prev_p = start
       merge_count = 0
       while p:
-        i = 0
         # 划分链表
-        p1 = p
-        p2 = p1
-        p1_end = p2
-        while i < merge_size and p2:
-          p1_end = p2
-          i+= 1
-          p2 = p2.next
-        i = 0
-        p1_end.next = None
-        p2_end = p2
-        next_p = p2
-        while i< merge_size and next_p:
-          i+= 1
-          p2_end = next_p
-          next_p = next_p.next
-        if p2_end:
-          p2_end.next = None
-
-        # 合并
-        p = prev_p
-        while p1 and p2:
-          if p1.val < p2.val:
-            p.next = p1
-            p1 = p1.next
-          else:
-            i+= 1
-            p.next = p2
-            p2 = p2.next
-          p = p.next
-
-        p.next =  p2 if p2 else p1
-        prev_p = p
-        while prev_p.next:
-          prev_p = prev_p.next
+        l1_start = p
+        l1_end = self.move_forward(l1_start, merge_size -1)
+        l2_start = l1_end.next
+        l1_end.next = None
+        if l2_start:
+          l2_end = self.move_forward(l2_start, merge_size -1)
+          next_p = l2_end.next
+          l2_end.next = None
+        else:
+          next_p = None
+        l3_start = self.merge(l1_start,l2_start)
+        prev_p.next = l3_start
+        prev_p = self.move_to_end(prev_p)
         p = next_p
         merge_count += 1
       if merge_count == 1:
@@ -171,3 +139,13 @@ def test():
 
   l2 = arrayToList([-1,5,3,4,0])
   assert [-1,0,3,4,5] == listToArray(s.sortList(l2))
+
+  l4 = arrayToList([3,2,1])
+  assert [1,2,3] == listToArray(s.sortList(l4))
+
+  l5 = arrayToList([3,2])
+  assert [2,3] == listToArray(s.sortList(l5))
+
+  l6 = arrayToList([3])
+  assert [3] == listToArray(s.sortList(l6))
+
