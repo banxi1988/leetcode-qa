@@ -75,8 +75,49 @@ def reverseList2(head:Optional[ListNode]):
 
   return start.next
 
+def mergeTwoSortedLists(l1:Optional[ListNode], l2: Optional[ListNode]) ->ListNode:
+  """合并两个有序链表"""
+  if l1 is None:
+    return  l2
+  if l2 is None:
+    return l1
+  p1 = l1
+  p2 = l2
+  start = ListNode(0)
+  p = start
+  while p1 and p2:
+    if p1.val < p2.val:
+      p.next  = p1
+      p1 = p1.next
+    else:
+      p.next = p2
+      p2 = p2.next
+    p = p.next
+  p.next = p1 if p1 else p2
+
+  return start.next
+
+def moveToEnd(head:ListNode) -> ListNode:
+    p = head
+    while p.next:
+      p = p.next
+    return p
+
+def moveForward(head:ListNode, steps:int) -> ListNode:
+  p = head
+  i = 0
+  while i < steps and p.next:
+    i += 1
+    p = p.next
+  return p
 
 
+def test_merge_two_sorted_list():
+  l1 = arrayToList([1, 2, 4])
+  l2 = arrayToList([1, 3, 4])
+
+  m1 = mergeTwoSortedLists(l1, l2)
+  assert [1, 1, 2, 3, 4, 4] == listToArray(m1)
 
 
 def test_list_nodes():
