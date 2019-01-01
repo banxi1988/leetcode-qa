@@ -10,12 +10,46 @@ class ListNode:
     self.next = None # type: ListNode
 
   def __str__(self):
-    p = self.next
     values = [self.val]
+    if hasCycle(self):
+      return str(self.val) + "->0"
+    p = self.next
     while p:
       values.append(p.val)
       p = p.next
     return "->".join(map(str,values))
+
+def hasCycle(head:ListNode):
+  """ 检测单链表是否有环"""
+  slow = head
+  fast = head
+  while slow and fast and fast.next:
+    slow = slow.next
+    fast = fast.next.next
+    if slow and slow == fast:
+      return  True
+  return False
+
+def detectCycle(head:ListNode):
+  """返回链表有环的起始节点"""
+  if head is None or head.next is None:
+    return None
+  slow = head
+  fast = head
+  hasCycle = False
+  while slow and fast and fast.next:
+    slow = slow.next
+    fast = fast.next.next
+    if slow and slow == fast:
+      hasCycle = True
+      break
+  if not hasCycle:
+    return None
+  q = head
+  while q != slow:
+    q = q.next
+    slow = slow.next
+  return q
 
 def arrayToList(nums:List[int]) -> Optional[ListNode]:
   if not nums:
@@ -55,6 +89,20 @@ def reverseList(head:Optional[ListNode]):
     p = p.next
   p.next = None # NOTE,不置空容易造成循环链表
   return start.next
+
+def reverseListR(head:Optional[ListNode]):
+  if head is None or head.next is None:
+    return head
+  #1
+  # 2,3
+  # 3,2
+  reverse_start = head.next
+  reversed_end = reverse_start
+  reversed_start = reverseListR(reverse_start)
+  reversed_end.next = head
+  head.next = None
+  return reversed_start
+
 
 
 def reverseList2(head:Optional[ListNode]):
@@ -135,3 +183,7 @@ def test_reverse_list():
   l1 = arrayToList([1,2,3])
   l3 = reverseList2((l1))
   assert [3,2,1] == listToArray(l3)
+  l1 = arrayToList([1,2,3])
+  l4 = reverseListR((l1))
+  assert [3,2,1] == listToArray(l4)
+
