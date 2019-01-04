@@ -3,6 +3,8 @@
 __author__ = '代码会说话'
 
 """
+LeetCode 123. 买卖股票的最佳时机 III by 代码会说话
+
 给定一个数组，它的第 i 个元素是一支给定的股票在第 i 天的价格。
 
 设计一个算法来计算你所能获取的最大利润。你最多可以完成 两笔 交易。
@@ -33,71 +35,50 @@ __author__ = '代码会说话'
 from typing import List
 
 class Solution:
-  def maxProfitByOne(self, prices:List[int]) -> int:
-    price_count = len(prices)
-    if price_count < 2:
-      return 0
 
-    profits = [0] * price_count
-    buy = prices[0]
-    for i in range(1, price_count):
-      price = prices[i]
-      if price > buy:
-        profits[i] = price - buy
-      else:
-        buy = price
-    return max(profits)
 
   def maxProfit(self, prices:List[int]) -> int:
     if not prices:
       return 0
-    peek = 0
-    valley = prices[0]
-    key_points = []
-    for price in prices[1:]:
-      if price < peek:
-        if peek > valley:
-          key_points.extend([valley,peek])
-        valley=price
-        peek=0
-      else:
-        if price > peek:
-          peek = price
-        if price < valley:
-          valley = price
-    if peek > valley:
-      key_points.extend([valley,peek])
 
-    pair_count = int(len(key_points) / 2)
-    if pair_count < 1:
-      return  0
-    if pair_count == 1:
-      return key_points[1] - key_points[0]
-    max_profit = 0
-    for i in range(1, pair_count):
-      divde = 2 * i
-      left_prices = key_points[:divde]
-      right_prices = key_points[divde:]
-      lp = self.maxProfitByOne(left_prices)
-      rp = self.maxProfitByOne(right_prices)
-      if lp + rp > max_profit:
-        max_profit = lp + rp
-    return max_profit
+    int_min =  -100 # sys.maxsize
+    v1 = int_min # 买了第一次股票之后现金流。
+    v2 = int_min # 卖1
+    v3 = int_min # 买2
+    v4 = int_min # 卖2
+
+    # 第一天股票价格 7
+    v1 = -7
+    # 第二天股票价格 1
+    v1 = max(-7,-1) # -1
+    v2 = v1 + 1 # 0
+    # 第三天股票价格 5
+    v1 = max(-1,-5) # -1
+    v2 = max(0,v1 + 5) # 4
+    v3 = v2 - 5,-6 #
+
+
+
+
+
 
 
 
 
 def test():
   s = Solution()
-  assert s.maxProfit(make_large_prices()) == 0
-  assert s.maxProfit([5,4,3,2,1,0,0]) == 0
+
+  assert s.maxProfit([1,2,3,4,5]) == 4
+  # return
   assert s.maxProfit([1,2,4,2,5,7,2,4,9,0]) == 13
+  assert s.maxProfit([5,4,3,2,1,0,0]) == 0
   assert s.maxProfit([7,1,5,6,5,5,6,2,7]) == 10
   assert s.maxProfit([7,1,5,6,5,4,6,2,7]) == 10
   assert s.maxProfit([7,1,5,3,6,4]) == 7
   assert s.maxProfit([7,6,4,3,1]) == 0
   assert s.maxProfit([1,2,3,4,5]) == 4
   assert s.maxProfit([3,3,5,0,0,3,1,4]) == 6
+  assert s.maxProfit(make_large_prices()) == 0
 
 # 199 / 200 个通过测试用例
 

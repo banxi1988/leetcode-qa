@@ -55,7 +55,8 @@ class Solution:
     profits = []
     for price in prices[1:]:
       if price < peek:
-        profits.append(peek - valley)
+        if peek > valley:
+          profits.append(peek - valley)
         valley=price
         peek=0
       else:
