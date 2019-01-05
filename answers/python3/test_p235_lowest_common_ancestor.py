@@ -32,6 +32,10 @@ __author__ = '代码会说话'
 
 所有节点的值都是唯一的。
 p、q 为不同节点且均存在于给定的二叉搜索树中。
+
+  3
+1  4
+ 2
 """
 
 from tree_node import  *
@@ -40,10 +44,11 @@ from collections import defaultdict
 
 class Solution:
   def lowestCommonAncestor(self, root:TreeNode, p:TreeNode, q:TreeNode) -> TreeNode:
-    if root == p or root == p:
+    if root.val == p.val or root.val == q.val:
       return root
     val_to_path = defaultdict(list)
-
+    min_val = min(p.val, q.val)
+    max_val = max(p.val, q.val)
     nodes = [root]
     q_found = False
     p_found = False
@@ -59,12 +64,12 @@ class Solution:
       parent_path = val_to_path[node.val]
       left = node.left
       right = node.right
-      if left:
+      if node.val > min_val and left:
         path = list(parent_path)
         path.append(left)
         val_to_path[left.val] = path
         nodes.append(left)
-      if right:
+      if node.val < max_val and right:
         path = list(parent_path)
         path.append(right)
         val_to_path[right.val] = path
@@ -82,13 +87,18 @@ class Solution:
 
 
 def test():
+  s = Solution()
+  t2 = make_simple_tree(3,1,4)
+  t2.left.right = TreeNode(2)
+  assert s.lowestCommonAncestor(t2,TreeNode(2), TreeNode(4)).val == 3
+  assert s.lowestCommonAncestor(t2,TreeNode(2), TreeNode(3)).val == 3
   t1 = make_simple_tree(6,
                         make_simple_tree(2,0, make_simple_tree(4,3,5)),
                         make_simple_tree(8,7,9)
                         )
   assert [6,2,8,0,4,7,9,3,5] == levelVisit(t1)
 
-  s = Solution()
   assert s.lowestCommonAncestor(t1,TreeNode(2), TreeNode(8)).val == 6
   assert s.lowestCommonAncestor(t1,TreeNode(2), TreeNode(4)).val == 2
+
 
