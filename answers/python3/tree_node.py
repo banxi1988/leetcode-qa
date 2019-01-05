@@ -2,7 +2,7 @@
 
 __author__ = '代码会说话'
 """
-数据结构二叉树(1) 树的高度及层序遍历  by 代码会说话
+数据结构二叉树(2) 基于层序遍历的Python迭代器与生成器  by 代码会说话
 
 """
 from typing import Callable,Any,Generator
@@ -13,11 +13,35 @@ class TreeNode:
     self.left = None # type: TreeNode
     self.right = None # type: TreeNode
 
-  def __iter__(self):
-    # return TreeNodeIterator(self)
-    return gen_node(self)
+  def __str__(self):
+    return str(self.val)
 
-def gen_node(tree:TreeNode) -> Generator[TreeNode,None,None] :
+  def __iter__(self):
+    return gen_tree_node(self)
+
+
+class TreeNodeIterator:
+  def __init__(self, tree: TreeNode):
+    self._nodes = [tree]
+
+  def __next__(self):
+    try:
+      node = self._nodes.pop(0)
+    except IndexError:
+      raise StopIteration
+    else:
+      left = node.left
+      right = node.right
+      if left:
+        self._nodes.append(left)
+      if right:
+        self._nodes.append(right)
+    return node
+
+  def __iter__(self):
+    return self
+
+def gen_tree_node(tree:TreeNode):
   nodes = [tree]
   while nodes:
     node = nodes.pop(0)
@@ -26,8 +50,6 @@ def gen_node(tree:TreeNode) -> Generator[TreeNode,None,None] :
       nodes.append(node.left)
     if node.right:
       nodes.append(node.right)
-
-
 
 def make_simple_tree(rootVal:int,left:int, right:int) -> TreeNode:
   """
@@ -53,24 +75,7 @@ def make_basic_tree():
   root.right = make_simple_tree(3,6,7)
   return root
 
-class TreeNodeIterator:
-  """二叉树的层序遍历迭代器"""
-  def __init__(self, tree:TreeNode):
-    self._nodes = [tree]
 
-  def __next__(self):
-    try:
-      node = self._nodes.pop(0)
-    except IndexError:
-      raise StopIteration()
-    else:
-      if node.left:
-        self._nodes.append(node.left)
-      if node.right:
-        self._nodes.append(node.right)
-      return node
-  def __iter__(self):
-    return self
 
 
 def levelTraversal(tree:TreeNode,visitFn:Callable[[TreeNode],Any]):
