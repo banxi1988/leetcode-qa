@@ -50,7 +50,7 @@ class Solution:
       val = node.val
       if val == min_val or val == max_val:
         return node
-      if val > min_val and val < max_val:
+      if min_val < val < max_val:
         return node
       left = node.left
       right = node.right
