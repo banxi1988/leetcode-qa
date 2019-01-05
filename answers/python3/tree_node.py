@@ -59,7 +59,22 @@ def gen_tree_node(tree:TreeNode):
     if node.right:
       nodes.append(node.right)
 
-def make_simple_tree(rootVal:int,left:Union[int,TreeNode], right:Union[int,TreeNode]) -> TreeNode:
+def bst_generator(root:TreeNode):
+  left_most = []
+  def collect_left_most(node:TreeNode):
+    p = node
+    while p:
+      left_most.append(p)
+      p = p.left
+
+  collect_left_most(root)
+  while left_most:
+    node = left_most.pop()
+    yield node
+    if node.right:
+      collect_left_most(node.right)
+
+def make_simple_tree(rootVal:int,left:Union[int,TreeNode,None], right:Union[int,TreeNode,None]) -> TreeNode:
   """
     1
   /  \
