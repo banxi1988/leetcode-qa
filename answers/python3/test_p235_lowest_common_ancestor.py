@@ -44,44 +44,23 @@ from collections import defaultdict
 
 class Solution:
   def lowestCommonAncestor(self, root:TreeNode, p:TreeNode, q:TreeNode) -> TreeNode:
-    if root.val == p.val or root.val == q.val:
-      return root
-    val_to_path = defaultdict(list)
     min_val = min(p.val, q.val)
     max_val = max(p.val, q.val)
     nodes = [root]
-    q_found = False
-    p_found = False
-    val_to_path[root.val] = [root]
     while nodes:
       node = nodes.pop(0)
-      if node.val == p.val:
-        p_found = True
-      elif node.val == q.val:
-        q_found = True
-      if p_found and q_found:
-        break
-      parent_path = val_to_path[node.val]
+      val = node.val
+      if val == min_val or val == max_val:
+        return node
+      if val > min_val and val < max_val:
+        return node
       left = node.left
       right = node.right
       if node.val > min_val and left:
-        path = list(parent_path)
-        path.append(left)
-        val_to_path[left.val] = path
         nodes.append(left)
       if node.val < max_val and right:
-        path = list(parent_path)
-        path.append(right)
-        val_to_path[right.val] = path
         nodes.append(right)
 
-
-    p_path = val_to_path[p.val]
-    q_path = val_to_path[q.val]
-    max_common_length = min(len(p_path), len(q_path))
-    for i in range(max_common_length-1, -1, -1):
-      if p_path[i].val == q_path[i].val:
-        return p_path[i]
 
 
 
