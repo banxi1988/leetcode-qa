@@ -41,22 +41,31 @@ class Solution:
   def lowestCommonAncestor(self, root:TreeNode, p:TreeNode, q:TreeNode) -> TreeNode:
     if root == p or root == p:
       return root
-    def find_root_to_node_path(parent:TreeNode,node:TreeNode,path:list):
+    root_to_p_path = []
+    root_to_q_path = []
+    found_count = 0
+
+    def find_root_to_node_path(parent:TreeNode,path:list):
       if parent is None:
         return None
       path.append(parent)
-      if parent.val == node.val:
-        return path
-      left_path = find_root_to_node_path(parent.left, node, list(path))
-      if left_path:
-        return left_path
-      right_path = find_root_to_node_path(parent.right, node, list(path))
-      if right_path:
-        return right_path
+      nonlocal found_count
+      nonlocal root_to_q_path,root_to_p_path
+      if parent.val == p.val:
+        root_to_p_path = path
+        found_count += 1
+      elif parent.val == q.val:
+        root_to_q_path = path
+        found_count += 1
 
-    root_to_p_path = find_root_to_node_path(root,p, [])
-    root_to_q_path = find_root_to_node_path(root,q, [])
+      if found_count == 2:
+        return
+      find_root_to_node_path(parent.left, list(path))
+      if found_count == 2:
+        return
+      find_root_to_node_path(parent.right, list(path))
 
+    find_root_to_node_path(root, [])
     max_common_length = min(len(root_to_p_path), len(root_to_q_path))
     for i in range(max_common_length-1, -1, -1):
       if root_to_q_path[i].val == root_to_p_path[i].val:
