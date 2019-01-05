@@ -5,7 +5,7 @@ __author__ = '代码会说话'
 数据结构二叉树(2) 基于层序遍历的Python迭代器与生成器  by 代码会说话
 
 """
-from typing import Callable,Any,Generator
+from typing import Callable,Any,Generator,Union
 
 class TreeNode:
   def __init__(self, x:int):
@@ -13,11 +13,19 @@ class TreeNode:
     self.left = None # type: TreeNode
     self.right = None # type: TreeNode
 
+  def __repr__(self):
+    return self.__str__()
+
   def __str__(self):
     return str(self.val)
 
   def __iter__(self):
     return gen_tree_node(self)
+
+  def find_child_node_by_val(self,val:int):
+    for node in self:
+      if node.val == val:
+        return node
 
 
 class TreeNodeIterator:
@@ -51,15 +59,21 @@ def gen_tree_node(tree:TreeNode):
     if node.right:
       nodes.append(node.right)
 
-def make_simple_tree(rootVal:int,left:int, right:int) -> TreeNode:
+def make_simple_tree(rootVal:int,left:Union[int,TreeNode], right:Union[int,TreeNode]) -> TreeNode:
   """
     1
   /  \
   2   3
   """
   root = TreeNode(rootVal)
-  root.left = TreeNode(left)
-  root.right = TreeNode(right)
+  if isinstance(left,int):
+    root.left = TreeNode(left)
+  else:
+    root.left = left
+  if isinstance(right, int):
+    root.right = TreeNode(right)
+  else:
+    root.right = right
   return root
 
 def make_basic_tree():

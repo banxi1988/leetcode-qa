@@ -38,48 +38,16 @@ p、q 为不同节点且均存在于给定的二叉树中。
 """
 
 from tree_node import  *
-from typing import List
-from collections import defaultdict
 
 class Solution:
   def lowestCommonAncestor(self, root:TreeNode, p:TreeNode, q:TreeNode) -> TreeNode:
-    if root == p or root == p:
+    if not root or root == p or root == q:
       return root
-    val_to_path = defaultdict(list)
-
-    nodes = [root]
-    q_found = False
-    p_found = False
-    val_to_path[root.val] = [root]
-    while nodes:
-      node = nodes.pop(0)
-      if node.val == p.val:
-        p_found = True
-      elif node.val == q.val:
-        q_found = True
-      if p_found and q_found:
-        break
-      parent_path = val_to_path[node.val]
-      left = node.left
-      right = node.right
-      if left:
-        path = list(parent_path)
-        path.append(left)
-        val_to_path[left.val] = path
-        nodes.append(left)
-      if right:
-        path = list(parent_path)
-        path.append(right)
-        val_to_path[right.val] = path
-        nodes.append(right)
-
-
-    p_path = val_to_path[p.val]
-    q_path = val_to_path[q.val]
-    max_common_length = min(len(p_path), len(q_path))
-    for i in range(max_common_length-1, -1, -1):
-      if p_path[i].val == q_path[i].val:
-        return p_path[i]
+    left = self.lowestCommonAncestor(root.left, p, q)
+    right = self.lowestCommonAncestor(root.right, p, q)
+    if left and right:
+      return root
+    return left or right
 
 
 
@@ -92,5 +60,9 @@ def test():
   assert [3,5,1,6,2,0,8,7,4] == levelVisit(t1)
 
   s = Solution()
-  assert s.lowestCommonAncestor(t1,TreeNode(5), TreeNode(1)).val == 3
-  assert s.lowestCommonAncestor(t1,TreeNode(5), TreeNode(4)).val == 5
+  n5 = t1.find_child_node_by_val(5)
+  n4 = t1.find_child_node_by_val(4)
+  n1 = t1.find_child_node_by_val(1)
+
+  assert s.lowestCommonAncestor(t1, n5, n1).val == 3
+  assert s.lowestCommonAncestor(t1,n5, n4).val == 5
