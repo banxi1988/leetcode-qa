@@ -39,8 +39,6 @@ p、q 为不同节点且均存在于给定的二叉搜索树中。
 """
 
 from tree_node import  *
-from typing import List
-from collections import defaultdict
 
 class Solution:
   def lowestCommonAncestor(self, root:TreeNode, p:TreeNode, q:TreeNode) -> TreeNode:
@@ -56,9 +54,9 @@ class Solution:
         return node
       left = node.left
       right = node.right
-      if node.val > min_val and left:
+      if val > min_val and left:
         nodes.append(left)
-      if node.val < max_val and right:
+      if val < max_val and right:
         nodes.append(right)
 
 
