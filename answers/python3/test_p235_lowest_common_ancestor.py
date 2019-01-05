@@ -36,40 +36,47 @@ p、q 为不同节点且均存在于给定的二叉搜索树中。
 
 from tree_node import  *
 from typing import List
+from collections import defaultdict
 
 class Solution:
   def lowestCommonAncestor(self, root:TreeNode, p:TreeNode, q:TreeNode) -> TreeNode:
     if root == p or root == p:
       return root
-    root_to_p_path = []
-    root_to_q_path = []
-    found_count = 0
+    val_to_path = defaultdict(list)
 
-    def find_root_to_node_path(parent:TreeNode,path:list):
-      if parent is None:
-        return None
-      path.append(parent)
-      nonlocal found_count
-      nonlocal root_to_q_path,root_to_p_path
-      if parent.val == p.val:
-        root_to_p_path = path
-        found_count += 1
-      elif parent.val == q.val:
-        root_to_q_path = path
-        found_count += 1
+    nodes = [root]
+    q_found = False
+    p_found = False
+    val_to_path[root.val] = [root]
+    while nodes:
+      node = nodes.pop(0)
+      if node.val == p.val:
+        p_found = True
+      elif node.val == q.val:
+        q_found = True
+      if p_found and q_found:
+        break
+      parent_path = val_to_path[node.val]
+      left = node.left
+      right = node.right
+      if left:
+        path = list(parent_path)
+        path.append(left)
+        val_to_path[left.val] = path
+        nodes.append(left)
+      if right:
+        path = list(parent_path)
+        path.append(right)
+        val_to_path[right.val] = path
+        nodes.append(right)
 
-      if found_count == 2:
-        return
-      find_root_to_node_path(parent.left, list(path))
-      if found_count == 2:
-        return
-      find_root_to_node_path(parent.right, list(path))
 
-    find_root_to_node_path(root, [])
-    max_common_length = min(len(root_to_p_path), len(root_to_q_path))
+    p_path = val_to_path[p.val]
+    q_path = val_to_path[q.val]
+    max_common_length = min(len(p_path), len(q_path))
     for i in range(max_common_length-1, -1, -1):
-      if root_to_q_path[i].val == root_to_p_path[i].val:
-        return root_to_p_path[i]
+      if p_path[i].val == q_path[i].val:
+        return p_path[i]
 
 
 
