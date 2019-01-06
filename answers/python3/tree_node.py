@@ -20,7 +20,7 @@ class TreeNode:
     return str(self.val)
 
   def __iter__(self):
-    return gen_tree_node(self)
+    return bt_levelorder_generator(self)
 
   def find_child_node_by_val(self,val:int):
     for node in self:
@@ -49,7 +49,7 @@ class TreeNodeIterator:
   def __iter__(self):
     return self
 
-def gen_tree_node(tree:TreeNode):
+def bt_levelorder_generator(tree:TreeNode):
   nodes = [tree]
   while nodes:
     node = nodes.pop(0)
@@ -59,7 +59,7 @@ def gen_tree_node(tree:TreeNode):
     if node.right:
       nodes.append(node.right)
 
-def bst_generator(root:TreeNode):
+def bt_inorder_generator(root:TreeNode):
   left_most = []
   def collect_left_most(node:TreeNode):
     p = node
@@ -73,6 +73,10 @@ def bst_generator(root:TreeNode):
     yield node
     if node.right:
       collect_left_most(node.right)
+
+def bst_generator(root:TreeNode):
+  return bt_inorder_generator(root)
+
 
 def make_simple_tree(rootVal:int,left:Union[int,TreeNode,None], right:Union[int,TreeNode,None]) -> TreeNode:
   """
