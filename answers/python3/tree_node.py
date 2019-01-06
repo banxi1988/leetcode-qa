@@ -2,10 +2,11 @@
 
 __author__ = '代码会说话'
 """
-数据结构二叉树(2) 基于层序遍历的Python迭代器与生成器  by 代码会说话
+数据结构二叉树(3) 二叉树的中序遍历的递归算法与迭代算法 by 代码会说话
 
 """
-from typing import Callable,Any,Generator,Union
+from typing import Callable, Any, Generator, Union, List
+
 
 class TreeNode:
   def __init__(self, x:int):
@@ -59,23 +60,7 @@ def bt_levelorder_generator(tree:TreeNode):
     if node.right:
       nodes.append(node.right)
 
-def bt_inorder_generator(root:TreeNode):
-  left_most = []
-  def collect_left_most(node:TreeNode):
-    p = node
-    while p:
-      left_most.append(p)
-      p = p.left
 
-  collect_left_most(root)
-  while left_most:
-    node = left_most.pop()
-    yield node
-    if node.right:
-      collect_left_most(node.right)
-
-def bst_generator(root:TreeNode):
-  return bt_inorder_generator(root)
 
 
 def make_simple_tree(rootVal:int,left:Union[int,TreeNode,None], right:Union[int,TreeNode,None]) -> TreeNode:
@@ -108,8 +93,97 @@ def make_basic_tree():
   root.right = make_simple_tree(3,6,7)
   return root
 
+def bt_preorder_generator(root:TreeNode):
+  visited = []
+  nodes = [root]
+  while nodes:
+    node = nodes.pop()
+    yield  node
+    visited.append(node)
+    left = node.left
+    if left:
+      nodes.append(left)
+
+    while not nodes:
+      if visited:
+        vnode = visited.pop()
+        if vnode.right:
+          nodes.append(vnode.right)
+      else:
+        break
 
 
+def bt_inorder_generator(root:TreeNode):
+  # 1,2,4
+  nodes = []
+  def collect_left_most(branch:TreeNode):
+    p = branch
+    while p:
+      nodes.append(p)
+      p = p.left
+  collect_left_most(root)
+  while nodes:
+    node = nodes.pop()
+    yield node
+    if node.right:
+      collect_left_most(node.right)
+
+
+
+def bst_generator(root:TreeNode):
+  return bt_inorder_generator(root)
+
+
+def inorder_traversal(root: TreeNode):
+  def inorder(branch: TreeNode, out: List[int]):
+    if branch.left:
+      inorder(branch.left, out)
+    out.append(branch.val)
+    if branch.right:
+      inorder(branch.right, out)
+  out = []
+  inorder(root, out)
+  return out
+
+
+
+def test_inorder_traversal():
+  t1 = make_basic_tree()
+  assert [4, 2,5, 1,6, 3 ,7] == inorder_traversal(t1)
+
+  nums = [node.val for node in bt_inorder_generator(t1)]
+  assert [4, 2,5, 1,6, 3 ,7] == nums
+
+def preorder_traversal(root: TreeNode):
+  def preorder(branch: TreeNode, out: List[int]):
+    out.append(branch.val)
+    if branch.left:
+      preorder(branch.left, out)
+    if branch.right:
+      preorder(branch.right, out)
+  out = []
+  preorder(root, out)
+  return out
+
+def test_preorder_traversal():
+  """
+   2
+3   1
+ \
+  5
+   \
+    4
+  :return:
+  """
+  t2 = make_simple_tree(2,3,1)
+  t2.left.right = make_simple_tree(5,None,4)
+  nums2 = [node.val for node in bt_preorder_generator(t2)]
+  assert [2,3,5,4,1] == nums2
+
+  t1 = make_basic_tree()
+  assert [1,2,4,5,3,6,7] == preorder_traversal(t1)
+  nums = [node.val for node in bt_preorder_generator(t1)]
+  assert [1,2,4,5,3,6,7] == nums
 
 def levelTraversal(tree:TreeNode,visitFn:Callable[[TreeNode],Any]):
   if tree is None:
