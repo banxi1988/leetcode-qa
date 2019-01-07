@@ -209,9 +209,21 @@ def postorder_traversal(root: TreeNode):
   postorder(root, out)
   return out
 
-def bt_postorder_generator(root:TreeNode):
-  nodes = []
+def bt_postorder(root:TreeNode):
+  nodes = [root]
   passed = []
+  while nodes:
+    node = nodes.pop()
+    passed.insert(0,node)
+    right = node.right
+    left = node.left
+    if left:
+      nodes.append(left)
+    if right:
+      nodes.append(right)
+
+  nums = [node.val for node in passed]
+  return nums
 
 def test_postorder_traversal():
   """
@@ -223,17 +235,15 @@ def test_postorder_traversal():
     4
   :return:
   """
-  # t2 = make_simple_tree(2,3,1)
-  # t2.left.right = make_simple_tree(5,None,4)
-  # nums2 = [node.val for node in bt_preorder_generator(t2)]
-  # assert [2,3,5,4,1] == nums2
+  t2 = make_simple_tree(2,3,1)
+  t2.left.right = make_simple_tree(5,None,4)
+  assert [4,5,3,1,2] == bt_postorder(t2)
 
   t1 = make_basic_tree()
   n4 = t1.find_child_node_by_val(4)
   n4.right = make_simple_tree(8,9, None)
   assert [9,8,4,5,2,6,7,3,1] == postorder_traversal(t1)
-  # nums = [node.val for node in bt_preorder_generator(t1)]
-  # assert [4,5,2,6,7,3,1] == nums
+  assert [9,8,4,5,2,6,7,3,1] == bt_postorder(t1)
 
 def levelTraversal(tree:TreeNode,visitFn:Callable[[TreeNode],Any]):
   if tree is None:
