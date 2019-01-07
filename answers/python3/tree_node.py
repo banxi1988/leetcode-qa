@@ -249,6 +249,37 @@ def levelTraversal(tree:TreeNode,visitFn:Callable[[TreeNode],Any]):
     if right:
       nodes.append(right)
 
+def levelOrder(root:TreeNode) -> List[List[int]]:
+    if not root:
+      return []
+    nodes = [root]
+    root.level = 1
+    result = []
+    level_list = []
+    prev_level = 0
+    while nodes:
+      node = nodes.pop(0)
+      level = node.level
+      if level > prev_level:
+        if level_list:
+          result.append(level_list)
+        level_list = []
+        prev_level = level
+      level_list.append(node.val)
+      left = node.left
+      right = node.right
+
+      if left:
+        left.level = level + 1
+        nodes.append(left)
+      if right:
+        right.level = level + 1
+        nodes.append(right)
+
+    if level_list:
+      result.append(level_list)
+
+    return result
 
 def levelVisit(tree:TreeNode):
   if tree is None:
