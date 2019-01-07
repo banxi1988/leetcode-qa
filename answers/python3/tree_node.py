@@ -133,6 +133,19 @@ def bt_inorder_generator(root:TreeNode):
 def bst_generator(root:TreeNode):
   return bt_inorder_generator(root)
 
+def is_valid_bst(root:TreeNode):
+  if not root:
+    return True
+  import sys
+  prev = -sys.maxsize -1
+  for node in bst_generator(root):
+    val = node.val
+    if val <= prev:
+      return False
+    prev = val
+  return  True
+
+
 
 def inorder_traversal(root: TreeNode):
   def inorder(branch: TreeNode, out: List[int]):
@@ -184,6 +197,43 @@ def test_preorder_traversal():
   assert [1,2,4,5,3,6,7] == preorder_traversal(t1)
   nums = [node.val for node in bt_preorder_generator(t1)]
   assert [1,2,4,5,3,6,7] == nums
+
+def postorder_traversal(root: TreeNode):
+  def postorder(branch: TreeNode, out: List[int]):
+    if branch.left:
+      postorder(branch.left, out)
+    if branch.right:
+      postorder(branch.right, out)
+    out.append(branch.val)
+  out = []
+  postorder(root, out)
+  return out
+
+def bt_postorder_generator(root:TreeNode):
+  nodes = []
+  passed = []
+
+def test_postorder_traversal():
+  """
+   2
+3   1
+ \
+  5
+   \
+    4
+  :return:
+  """
+  # t2 = make_simple_tree(2,3,1)
+  # t2.left.right = make_simple_tree(5,None,4)
+  # nums2 = [node.val for node in bt_preorder_generator(t2)]
+  # assert [2,3,5,4,1] == nums2
+
+  t1 = make_basic_tree()
+  n4 = t1.find_child_node_by_val(4)
+  n4.right = make_simple_tree(8,9, None)
+  assert [9,8,4,5,2,6,7,3,1] == postorder_traversal(t1)
+  # nums = [node.val for node in bt_preorder_generator(t1)]
+  # assert [4,5,2,6,7,3,1] == nums
 
 def levelTraversal(tree:TreeNode,visitFn:Callable[[TreeNode],Any]):
   if tree is None:
