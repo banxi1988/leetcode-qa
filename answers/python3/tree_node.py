@@ -150,9 +150,7 @@ def test_inorder_traversal():
   nums = [node.val for node in bt_inorder_generator(t1)]
   assert [4, 2,5, 1,6, 3 ,7] == nums
 
-"""
-数据结构二叉树(4) 二叉树的前序遍历的递归算法与迭代算法 by 代码会说话
-"""
+
 
 def preorder_traversal(root: TreeNode):
   out = []
@@ -213,32 +211,55 @@ def test_preorder_traversal():
   nums = [node.val for node in bt_preorder_generator(t1)]
   assert [1,2,4,5,3,6,7] == nums
 
+"""
+数据结构二叉树(5) 二叉树的后序遍历的迭代与递归算法与算法 by 代码会说话
+
+"""
+
 def postorder_traversal(root: TreeNode):
-  def postorder(branch: TreeNode, out: List[int]):
-    if branch.left:
-      postorder(branch.left, out)
-    if branch.right:
-      postorder(branch.right, out)
-    out.append(branch.val)
   out = []
-  postorder(root, out)
+  def postorder(branch:TreeNode):
+    if branch.left:
+      postorder(branch.left)
+    if branch.right:
+      postorder(branch.right)
+
+    out.append(branch.val)
+
+  postorder(root)
   return out
 
 def bt_postorder(root:TreeNode):
+  """
+
+    1
+   / \
+  2    3
+/ \   /  \
+4  5  6   7
+ \
+  8
+ /
+9
+
+N: 1/,2,3/,6,7
+visited:  3, 1
+  """
+  visited = []
   nodes = [root]
-  passed = []
   while nodes:
     node = nodes.pop()
-    passed.insert(0,node)
-    right = node.right
+    visited.insert(0, node.val)
     left = node.left
+    right = node.right
     if left:
       nodes.append(left)
     if right:
       nodes.append(right)
 
-  nums = [node.val for node in passed]
-  return nums
+  return visited
+
+
 
 def test_postorder_traversal():
   """
@@ -252,13 +273,13 @@ def test_postorder_traversal():
   """
   t2 = make_simple_tree(2,3,1)
   t2.left.right = make_simple_tree(5,None,4)
-  assert [4,5,3,1,2] == bt_postorder(t2)
+  # assert [4,5,3,1,2] == bt_postorder(t2)
 
   t1 = make_basic_tree()
   n4 = t1.find_child_node_by_val(4)
   n4.right = make_simple_tree(8,9, None)
   assert [9,8,4,5,2,6,7,3,1] == postorder_traversal(t1)
-  assert [9,8,4,5,2,6,7,3,1] == bt_postorder(t1)
+  # assert [9,8,4,5,2,6,7,3,1] == bt_postorder(t1)
 
 def levelTraversal(tree:TreeNode,visitFn:Callable[[TreeNode],Any]):
   if tree is None:
