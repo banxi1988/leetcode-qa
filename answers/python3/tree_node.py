@@ -2,7 +2,7 @@
 
 __author__ = '代码会说话'
 """
-数据结构二叉树(3) 二叉树的中序遍历的递归算法与迭代算法 by 代码会说话
+数据结构二叉树(4) 二叉树的前序遍历的递归算法与迭代算法 by 代码会说话
 
 """
 from typing import Callable, Any, Generator, Union, List
@@ -93,24 +93,7 @@ def make_basic_tree():
   root.right = make_simple_tree(3,6,7)
   return root
 
-def bt_preorder_generator(root:TreeNode):
-  visited = []
-  nodes = [root]
-  while nodes:
-    node = nodes.pop()
-    yield  node
-    visited.append(node)
-    left = node.left
-    if left:
-      nodes.append(left)
 
-    while not nodes:
-      if visited:
-        vnode = visited.pop()
-        if vnode.right:
-          nodes.append(vnode.right)
-      else:
-        break
 
 
 def bt_inorder_generator(root:TreeNode):
@@ -167,16 +150,48 @@ def test_inorder_traversal():
   nums = [node.val for node in bt_inorder_generator(t1)]
   assert [4, 2,5, 1,6, 3 ,7] == nums
 
+"""
+数据结构二叉树(4) 二叉树的前序遍历的递归算法与迭代算法 by 代码会说话
+"""
+
 def preorder_traversal(root: TreeNode):
-  def preorder(branch: TreeNode, out: List[int]):
+  out = []
+  def preorder(branch:TreeNode):
     out.append(branch.val)
     if branch.left:
-      preorder(branch.left, out)
+      preorder(branch.left)
     if branch.right:
-      preorder(branch.right, out)
-  out = []
-  preorder(root, out)
-  return out
+      preorder(branch.right)
+
+  preorder(root)
+  return  out
+
+def bt_preorder_generator(root:TreeNode):
+  """
+    1
+   / \
+  2    3
+/ \   /  \
+4  5  6   7
+
+  """
+  visited = []
+  nodes = [root]
+  while nodes:
+    node = nodes.pop()
+    yield node
+    visited.append(node)
+    if node.left:
+      nodes.append(node.left)
+
+    while not nodes:
+      if visited:
+        vnode = visited.pop()
+        if vnode.right:
+          nodes.append(vnode.right)
+      else:
+        break
+
 
 def test_preorder_traversal():
   """
