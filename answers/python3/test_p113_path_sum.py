@@ -60,12 +60,19 @@ class Solution:
 
     return results
 
-def test():
+def test_path_sum(benchmark):
   s = Solution()
   t1 = make_simple_tree(5,4,make_simple_tree(8,13,make_simple_tree(4,5,1)))
   t1.left.left = make_simple_tree(11,7,2)
+  n13 = t1.find_child_node_by_val(13)
+  n7 = t1.find_child_node_by_val(7)
+  n13.left = make_basic_tree()
+  n13.right = make_basic_tree()
+  n7.left = make_basic_tree()
+  n7.right = make_basic_tree()
 
-  assert s.pathSum(t1,22) == [
+  r1 = benchmark(s.pathSum, t1,22)
+  assert r1 == [
     [5,8,4,5],
     [5,4,11,2]
   ]

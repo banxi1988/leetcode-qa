@@ -93,7 +93,18 @@ def make_basic_tree():
   root.right = make_simple_tree(3,6,7)
   return root
 
+def make_flat_tree(nums:List[int],left_leaning=True):
+  dummy = TreeNode(0)
+  p = dummy
+  for num in nums:
+    if left_leaning:
+      p.left = TreeNode(num)
+      p = p.left
+    else:
+      p.right = TreeNode(num)
+      p = p.right
 
+  return dummy.left if left_leaning else dummy.right
 
 
 def bt_inorder_generator(root:TreeNode):
