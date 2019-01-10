@@ -61,8 +61,49 @@ __author__ = '代码会说话'
 
 from tree_node import *
 
+from collections import namedtuple, defaultdict
+class LevelNoRange:
+  __slots__ = ('min', 'max')
+  def __init__(self):
+    self.min = 0
+    self.max = 0
+
 class Solution:
-  def widthOfBinaryTree(self, root:TreeNode) -> int:
+  def widthOfBinaryTree_index(self, root:TreeNode) -> int:
+    if not root:
+      return 0
+    nodes = [root]
+    root.level = 1
+    root.no = 1
+    level_to_range = defaultdict(LevelNoRange)
+    max_width = 1
+    while nodes:
+      node = nodes.pop()
+      level = node.level
+      no = node.no
+      left = node.left
+      right = node.right
+      r = level_to_range[level]
+      if r.min == 0:
+        r.min = no
+      if r.max == 0:
+        r.max = no
+      r.min = min(r.min, no)
+      r.max = max(r.max, no)
+      if left:
+        left.level = level + 1
+        left.no =  2 * no
+        nodes.append(left)
+      if right:
+        right.level  = level + 1
+        right.no = 2 * no + 1
+        nodes.append(right)
+      width = r.max - r.min + 1
+      max_width = max(max_width, width)
+
+    return max_width
+
+  def widthOfBinaryTree_level(self, root:TreeNode) -> int:
     if not root:
       return 0
     root.level = 1
@@ -91,7 +132,7 @@ class Solution:
       max_width = max(max_width, len(level_symbols))
     return max_width
 
-
+  widthOfBinaryTree = widthOfBinaryTree_index
 
 
 
