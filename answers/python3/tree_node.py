@@ -406,3 +406,14 @@ def test_depthOfTree():
 
   t3 = TreeNode(1)
   assert depthOfTree(t3) == 1
+
+
+def bst_insert(root:TreeNode, val:int) -> TreeNode:
+  """ 二叉搜索树的递归插入操作 """
+  if not root:
+    return TreeNode(val)
+  if root.val > val:
+    root.left = bst_insert(root.left, val)
+  else:
+    root.right = bst_insert(root.right, val)
+  return root
