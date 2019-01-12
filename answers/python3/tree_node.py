@@ -6,6 +6,7 @@ __author__ = '代码会说话'
 
 """
 from typing import Callable, Any, Generator, Union, List
+from collections import deque
 
 
 class TreeNode:
@@ -31,11 +32,12 @@ class TreeNode:
 
 class TreeNodeIterator:
   def __init__(self, tree: TreeNode):
-    self._nodes = [tree]
+    self._nodes = deque()
+    self._nodes.append(tree)
 
   def __next__(self):
     try:
-      node = self._nodes.pop(0)
+      node = self._nodes.popleft()
     except IndexError:
       raise StopIteration
     else:
@@ -51,9 +53,10 @@ class TreeNodeIterator:
     return self
 
 def bt_levelorder_generator(tree:TreeNode):
-  nodes = [tree]
+  nodes = deque()
+  nodes.append(tree)
   while nodes:
-    node = nodes.pop(0)
+    node = nodes.popleft()
     yield node
     if node.left:
       nodes.append(node.left)
@@ -375,11 +378,12 @@ def test_depthOfTree_r():
 def depthOfTree(tree:TreeNode):
   if tree is None:
     return 0
-  nodes = [tree]
+  nodes = deque()
+  nodes.append(tree)
   max_depth = 1
   node_to_depth = {tree: 1}
   while nodes:
-    node = nodes.pop(0)
+    node = nodes.popleft()
     depth = node_to_depth[node]
     left = node.left
     right = node.right
