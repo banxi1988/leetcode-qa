@@ -39,22 +39,11 @@ from typing import  List
 
 class Solution:
   def largestPerimeter(self, A:List[int]) -> int:
-    sides = A
-    sides.sort(reverse=True)
-    count = len(sides)
-    for ci in range(0,count - 2):
-      c = sides[ci]
-      for bi in range(ci + 1,count -1):
-        b = sides[bi]
-        if b + b <= c:
-          break
-        for ai in range(bi + 1,count):
-          a = sides[ai]
-          if a + b > c:
-            return  a + b + c
-          else:
-            break
-
+    A.sort(reverse=True)
+    for i in range(0,len(A) - 2):
+      c, b, a = A[i:i + 3]
+      if a + b > c:
+        return a + b + c
     return  0
 
 

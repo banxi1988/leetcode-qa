@@ -36,27 +36,10 @@ __author__ = '代码会说话'
 """
 
 from typing import List
-from collections import defaultdict
 class Solution:
   def kClosest(self, points:List[List[int]], K:int) -> List[List[int]]:
-    distances = []
-    distance_to_indexes = defaultdict(list)
-    for index,point in enumerate(points):
-      x,y = point
-      distance = pow(x,2) + pow(y,2)
-      distance_to_indexes[distance].append(index)
-      distances.append(distance)
-    distances.sort()
-    closest = set(distances[:K])
-    result_indexes = []
-    for d in closest:
-      result_indexes.extend(distance_to_indexes[d])
-    result = []
-    for index in result_indexes:
-      result.append(points[index])
-
-    return result
-
+    points.sort(key=lambda p: p[0]**2 + p[1]**2)
+    return points[:K]
 
 
 
