@@ -205,6 +205,8 @@ def bt_preorder_generator(root:TreeNode):
         break
 
 
+
+
 def test_preorder_traversal():
   """
    2
@@ -224,6 +226,116 @@ def test_preorder_traversal():
   assert [1,2,4,5,3,6,7] == preorder_traversal(t1)
   nums = [node.val for node in bt_preorder_generator(t1)]
   assert [1,2,4,5,3,6,7] == nums
+
+def preorder_symmetric_traversal(root: TreeNode):
+  out = []
+  def preorder(branch:TreeNode):
+    out.append(branch.val)
+    if branch.right:
+      preorder(branch.right)
+    if branch.left:
+      preorder(branch.left)
+
+  preorder(root)
+  return  out
+
+def bt_symmetric_inorder_generator(root:TreeNode):
+  """
+    1
+   / \
+  2    3
+/ \   /  \
+4  5  6   7
+  """
+  nodes = []
+  def collect_right_most(branch:TreeNode):
+    right = branch
+    while right:
+      nodes.append(right)
+      right = right.right
+  collect_right_most(root)
+  while nodes:
+    node =  nodes.pop()
+    yield node
+    if node.left:
+      collect_right_most(node.left)
+
+def bt_symmetric_preorder_generator(root:TreeNode):
+  """
+    1
+   / \
+  2    3
+/ \   /  \
+4  5  6   7
+N: 1/,3/,7/,6/,2/,5/,4
+V:
+  """
+  nodes = deque([root])
+  visited = []
+  while nodes:
+    node =  nodes.popleft()
+    yield node
+    if node.left:
+      visited.append(node.left)
+    if node.right:
+      nodes.append(node.right)
+
+    while not nodes:
+      if visited:
+        node = visited.pop()
+        nodes.append(node)
+      else:
+        break
+
+
+def test_symmetric_preorder_traversal():
+  t1 = make_basic_tree()
+  assert [1,3,7,6,2,5,4] == preorder_symmetric_traversal(t1)
+  nums = [node.val for node in bt_symmetric_preorder_generator(t1)]
+  assert [1,3,7,6,2,5,4] == nums
+
+
+def postorder_symmetric_traversal(root: TreeNode):
+  out = []
+  def postorder(branch:TreeNode):
+    if branch.right:
+      postorder(branch.right)
+    if branch.left:
+      postorder(branch.left)
+    out.append(branch.val)
+
+  postorder(root)
+  return  out
+
+def bt_symmetric_postorder(root:TreeNode):
+  """
+  N:1/,3,2/,5,4/
+  V:  5,4,2,1
+  """
+  nodes = [root]
+  visited = deque()
+  while nodes:
+    node = nodes.pop()
+    visited.appendleft(node)
+    if node.right:
+      nodes.append(node.right)
+    if node.left:
+      nodes.append(node.left)
+  return visited
+
+
+def test_postorder_symmetric_traversal():
+  """
+    1
+   / \
+  2    3
+/ \   /  \
+4  5  6   7
+  """
+  t1 = make_basic_tree()
+  assert [7,6,3,5,4,2,1] == postorder_symmetric_traversal(t1)
+  nums = [node.val for node in bt_symmetric_postorder(t1)]
+  assert nums == [7,6,3,5,4,2,1]
 
 """
 数据结构二叉树(5) 二叉树的后序遍历的迭代与递归算法与算法 by 代码会说话
