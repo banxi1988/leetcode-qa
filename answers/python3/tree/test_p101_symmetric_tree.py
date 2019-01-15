@@ -34,9 +34,9 @@ from tree_node import *
 
 class Solution:
   def isSymmetric(self, root:TreeNode) -> bool:
+    if not root:
+      return True
     def is_same_symmetric_preorder(left:TreeNode,right:TreeNode)->bool:
-      if not root:
-        return True
       if left and right:
         if left.val != right.val:
           return False
