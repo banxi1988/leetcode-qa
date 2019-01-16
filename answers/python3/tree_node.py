@@ -29,6 +29,11 @@ class TreeNode:
       if node.val == val:
         return node
 
+  def __eq__(self, other):
+    if not isinstance(other,TreeNode):
+      return False
+    return is_same_tree(self,other)
+
 
 class TreeNodeIterator:
   def __init__(self, tree: TreeNode):
@@ -51,6 +56,29 @@ class TreeNodeIterator:
 
   def __iter__(self):
     return self
+
+def is_same_tree(t1:Union[TreeNode,None],t2:Union[TreeNode,None])->bool:
+  if t1 and t2:
+    if t1.val != t2.val:
+      return False
+    return is_same_tree(t1.left,t2.left) and is_same_tree(t1.right, t2.right)
+  elif t1 or t2:
+    return False
+  else:
+    return True
+
+def test_is_same_tree():
+  t1 = make_simple_tree(1,2,3)
+  t1_2 = make_simple_tree(1,2,3)
+  t2 = make_simple_tree(1,3,2)
+  t3 = make_simple_tree(1,3,None)
+  assert is_same_tree(t1,t1_2)
+  assert t1 == t1_2
+  assert is_same_tree(t1,t2) == False
+  assert t1 != t2
+  assert is_same_tree(t1,t3) == False
+  assert t1 != t3
+
 
 def bt_levelorder_generator(tree:TreeNode):
   nodes = deque()
