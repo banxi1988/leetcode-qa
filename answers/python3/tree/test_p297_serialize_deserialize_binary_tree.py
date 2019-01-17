@@ -26,51 +26,12 @@ __author__ = '代码会说话'
 from tree_node import *
 
 
-class Codec:
-
-  def serialize(self, root) -> str:
-    if not root:
-      return '[]'
-    level_nodes = [root]
-    sym_nodes = []
-    while True:
-      next_level_nodes = []
-      non_empty_count = 0
-      for node in level_nodes:
-        sym_nodes.append(node)
-        if not node:
-          continue
-        next_level_nodes.append(node.left)
-        next_level_nodes.append(node.right)
-        if node.left:
-          non_empty_count+= 1
-        if node.right:
-          non_empty_count+= 1
-      if non_empty_count > 0:
-        level_nodes = next_level_nodes
-      else:
-        break
-    while sym_nodes[-1] is None:
-      sym_nodes.pop()
-
-    symbols = [str(node.val) if node else 'null' for node in sym_nodes]
-    return '[' +','.join(symbols) + ']'
-
-
-
-
-
-
-  def deserialize(self, data:str) -> TreeNode:
-    if  len(data) < 3:
-      return None
-    list_str = data[1:len(data) -1]
-
-
 def test():
   s = Codec()
   t1 = make_simple_tree(1,2,make_simple_tree(3,4,5))
-  assert s.serialize(t1) == "[1,2,3,null,null,4,5]"
+  t1_str = "[1,2,3,null,null,4,5]"
+  assert s.serialize(t1) == t1_str
+  assert s.deserialize(t1_str) == t1
   assert s.serialize(None) == '[]'
   assert s.serialize(make_simple_tree(1,2,3)) == '[1,2,3]'
 

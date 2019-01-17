@@ -557,3 +557,61 @@ def bst_insert(root:TreeNode, val:int) -> TreeNode:
   else:
     root.right = bst_insert(root.right, val)
   return root
+
+class Codec:
+
+  def serialize(self, root) -> str:
+    if not root:
+      return '[]'
+    level_nodes = [root]
+    sym_nodes = []
+    while True:
+      next_level_nodes = []
+      non_empty_count = 0
+      for node in level_nodes:
+        sym_nodes.append(node)
+        if not node:
+          continue
+        next_level_nodes.append(node.left)
+        next_level_nodes.append(node.right)
+        if node.left:
+          non_empty_count+= 1
+        if node.right:
+          non_empty_count+= 1
+      if non_empty_count > 0:
+        level_nodes = next_level_nodes
+      else:
+        break
+    while sym_nodes[-1] is None:
+      sym_nodes.pop()
+
+    symbols = [str(node.val) if node else 'null' for node in sym_nodes]
+    return '[' +','.join(symbols) + ']'
+
+
+  def deserialize(self, data:str):
+    from collections import deque
+    if  len(data) < 3:
+      return None
+    list_str = data[1:len(data) -1]
+    symbols = deque(s.strip() for s in list_str.split(","))
+    root = TreeNode(int(symbols.popleft()))
+    prev_level = [root]
+    while symbols and prev_level:
+      next_level = []
+      for parent in prev_level:
+        if symbols:
+          symbol = symbols.popleft()
+          left = TreeNode(int(symbol)) if symbol != 'null' else None
+          if left:
+            parent.left = left
+            next_level.append(left)
+        if symbols:
+          symbol = symbols.popleft()
+          right = TreeNode(int(symbol)) if symbol != 'null' else None
+          if right:
+            parent.right = right
+            next_level.append(right)
+      prev_level = next_level
+
+    return root
