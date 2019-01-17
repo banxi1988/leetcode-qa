@@ -5,7 +5,7 @@ __author__ = '代码会说话'
 数据结构二叉树(4) 二叉树的前序遍历的递归算法与迭代算法 by 代码会说话
 
 """
-from typing import Callable, Any, Generator, Union, List
+from typing import Callable, Any, Generator, Union, List, Optional
 from collections import deque
 
 
@@ -548,15 +548,7 @@ def test_depthOfTree():
   assert depthOfTree(t3) == 1
 
 
-def bst_insert(root:TreeNode, val:int) -> TreeNode:
-  """ 二叉搜索树的递归插入操作 """
-  if not root:
-    return TreeNode(val)
-  if root.val > val:
-    root.left = bst_insert(root.left, val)
-  else:
-    root.right = bst_insert(root.right, val)
-  return root
+
 
 class Codec:
 
@@ -615,3 +607,33 @@ class Codec:
       prev_level = next_level
 
     return root
+
+def bst_insert_r(root:Optional[TreeNode], val:int) -> TreeNode:
+  """ 二叉搜索树的递归插入操作 """
+  if not root:
+    return TreeNode(val)
+  if root.val > val:
+    root.left = bst_insert_r(root.left, val)
+  else:
+    root.right = bst_insert_r(root.right, val)
+  return root
+
+def bst_insert(root:TreeNode, val:int) -> TreeNode:
+  """ 二叉搜索树的递归迭代插入操作 """
+  if not root:
+    return TreeNode(val)
+  prev = root
+  while prev:
+    if prev.val < val:
+      if prev.right:
+        prev = prev.right
+      else:
+        prev.right = TreeNode(val)
+        break
+    else:
+      if prev.left:
+        prev = prev.left
+      else:
+        prev.left = TreeNode(val)
+        break
+  return root
