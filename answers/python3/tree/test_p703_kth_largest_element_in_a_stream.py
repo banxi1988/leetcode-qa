@@ -101,29 +101,21 @@ class BST:
     return find_kth_num_in(self.root, k)
 
 
-import bisect
-from collections import deque
+import heapq
 class KthLargest:
 
   def __init__(self, k:int, nums:List[int]):
     self.k = k
     if nums:
-      self.nums =  deque(sorted(nums)[-k:])
+      self.nums = sorted(nums)[-k:]
     else:
-      self.nums = deque()
+      self.nums = []
 
   def add(self, val:int) -> int:
+    heapq.heappush(self.nums, val)
     count = len(self.nums)
-    if count == 0:
-      self.nums.append(val)
-    else:
-      if val <= self.nums[0]:
-        if count < self.k:
-          self.nums.appendleft(val)
-      else:
-        bisect.insort(self.nums, val)
-        if len(self.nums) > self.k:
-          self.nums.popleft()
+    if count > self.k:
+      heapq.heappop(self.nums)
     return self.nums[0]
 
 
