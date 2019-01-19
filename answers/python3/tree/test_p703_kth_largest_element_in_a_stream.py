@@ -101,18 +101,30 @@ class BST:
     return find_kth_num_in(self.root, k)
 
 
+import bisect
+from collections import deque
 class KthLargest:
 
   def __init__(self, k:int, nums:List[int]):
     self.k = k
-    self.bst = BST()
     if nums:
-      for num in nums:
-        self.bst.insert(num)
+      self.nums =  deque(sorted(nums)[-k:])
+    else:
+      self.nums = deque()
 
   def add(self, val:int) -> int:
-    self.bst.insert(val)
-    return self.bst.find_kth_num(self.k)
+    count = len(self.nums)
+    if count == 0:
+      self.nums.append(val)
+    else:
+      if val <= self.nums[0]:
+        if count < self.k:
+          self.nums.appendleft(val)
+      else:
+        bisect.insort(self.nums, val)
+        if len(self.nums) > self.k:
+          self.nums.popleft()
+    return self.nums[0]
 
 
 def test():
