@@ -79,6 +79,61 @@ def test_is_same_tree():
   assert is_same_tree(t1,t3) == False
   assert t1 != t3
 
+def is_balanced_tree(tree:TreeNode) -> bool:
+  if not tree:
+    return True
+  level_nodes = [tree]
+  node_count = 0
+  max_degree = 0
+  level_nodes_list =[]
+
+  while level_nodes:
+    level_nodes_list.append(level_nodes)
+    next_level_nodes =[]
+    for node in level_nodes:
+      node_count += 1
+      left = node.left
+      right = node.right
+      node.degree = 0
+      if left:
+        left.parent = node
+        next_level_nodes.append(left)
+      if right:
+        right.parent = node
+        next_level_nodes.append(right)
+    if next_level_nodes:
+      max_degree += 1
+    level_nodes = next_level_nodes
+  for node in level_nodes_list[-1]:
+    node.degree = 0
+  for level_nodes in reversed(level_nodes_list):
+    for node in level_nodes:
+      if hasattr(node,'parent'):
+        parent = node.parent
+        parent.degree = max(node.degree +1,parent.degree)
+  for level_nodes in level_nodes_list:
+    for node in level_nodes:
+      left_degree = node.left.degree if node.left else -1
+      right_degree = node.right.degree if node.right else -1
+      if abs(left_degree - right_degree) > 1:
+        return False
+  return True
+
+
+def test_is_balanced_tree():
+  codec = Codec()
+  t4 = codec.deserialize("[1,null,2,null,3]")
+  assert not is_balanced_tree(t4)
+  t2 = codec.deserialize("[1,2,2,3,3,null,null,4,4]")
+  assert not is_balanced_tree(t2)
+  t1 = codec.deserialize("[1,2,2,3,3,3,3,4,4,4,4,4,4,null,null,5,5]")
+  assert is_balanced_tree(t1)
+
+  t3 = codec.deserialize("[3,9,20,null,null,15,7]")
+  assert is_balanced_tree(t3)
+
+
+
 
 def bt_levelorder_generator(tree:TreeNode):
   nodes = deque()
