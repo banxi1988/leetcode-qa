@@ -54,8 +54,16 @@ class TimeMap:
   def __init__(self):
     self.key_to_value_timestamp_tuple_list = defaultdict(list)
 
+
   def set(self, key: 'str', value: 'str', timestamp: 'int') -> 'None':
-    self.key_to_value_timestamp_tuple_list[key].append((timestamp, value))
+    tuple_list = self.key_to_value_timestamp_tuple_list[key]
+    if len(tuple_list) < 2:
+      tuple_list.append((timestamp, value))
+    else:
+      if tuple_list[-1][1] == value and tuple_list[-2][1] == value:
+        tuple_list[-1] = (timestamp, value)
+      else:
+        tuple_list.append((timestamp, value))
 
   def get(self, key: 'str', timestamp: 'int') -> 'str':
     tuple_list = self.key_to_value_timestamp_tuple_list[key]
@@ -64,7 +72,8 @@ class TimeMap:
     timestamps = [t[0] for t in tuple_list]
     index = bisect.bisect_right(timestamps, timestamp)
     if index:
-      return tuple_list[index-1][1]
+      value = tuple_list[index-1][1]
+      return value
 
     return ''
 
