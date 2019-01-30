@@ -70,6 +70,7 @@ class TimeMap:
     if not tuple_list:
       return ''
     timestamps = [t[0] for t in tuple_list]
+    # find_le
     index = bisect.bisect_right(timestamps, timestamp)
     if index:
       value = tuple_list[index-1][1]
