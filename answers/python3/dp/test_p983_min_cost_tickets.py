@@ -26,6 +26,10 @@ __author__ = '代码会说话'
 在第 3 天，你花了 costs[1] = $7 买了一张为期 7 天的通行证，它将在第 3, 4, ..., 9 天生效。
 在第 20 天，你花了 costs[0] = $2 买了一张为期 1 天的通行证，它将在第 20 天生效。
 你总共花了 $11，并完成了你计划的每一天旅行。
+
+1,4,6,7,8,20
+2,4
+
 示例 2：
 
 输入：days = [1,2,3,4,5,6,7,8,9,10,30,31], costs = [2,7,15]
@@ -49,39 +53,34 @@ costs.length == 3
 from typing import List
 
 class Solution:
-  def buy_ticket(self,duration: int, cost: int,days:List[int],costs:List[int], d:int) -> int:
-    case_day_one = days[0]
+
+  def mincostTickets(self, days: 'List[int]', costs: 'List[int]') -> 'int':
     day_count = len(days)
-    i = 1
-    while i < day_count:
-      if days[i] - case_day_one < duration:
-        i+=1
-        continue
-      else:
-        break
-    case_other_days = days[i:]
-    return cost + self.mincostTickets(case_other_days, costs,d + 1)
-
-  def mincostTickets(self, days: 'List[int]', costs: 'List[int]',d=0) -> 'int':
-    day_count = len(days)
-    if day_count == 0:
-      return 0
-    if day_count == 1:
-      return costs[0]
-
-
-    case1_cost = self.buy_ticket(1,costs[0],days,costs,d)
-    case2_cost = self.buy_ticket(7,costs[1], days,costs,d)
-    case3_cost = self.buy_ticket(30,costs[2], days,costs,d)
-
-    return min(case1_cost,case2_cost,case3_cost)
+    min_costs = [0] * (day_count + 1)
+    min_costs[0] = 0
+    min_costs[1] = costs[0]
+    week_start = 0
+    month_start = 0
+    day_start = 0
+    for index in range(2,day_count + 1):
+      day = days[index -1]
+      day_start += 1
+      while day - days[week_start] >= 7:
+        week_start += 1
+      while day - days[month_start] >= 30:
+        month_start +=1
+      case1_cost = min_costs[day_start] + costs[0]
+      case2_cost = min_costs[week_start] + costs[1]
+      case3_cost = min_costs[month_start] + costs[2]
+      min_costs[index] = min(case1_cost,case2_cost,case3_cost)
+    return min_costs[-1]
 
 
 
 
 def test():
   s = Solution()
-  # assert s.mincostTickets(days = list(range(1,366)), costs = [2,7,15]) == 11
   assert s.mincostTickets(days=[1,4,6,9,10,11,12,13,14,15,16,17,18,20,21,22,23,27,28],costs= [3,13,45]) == 44
   assert s.mincostTickets(days = [1,4,6,7,8,20], costs = [2,7,15]) == 11
+  assert s.mincostTickets(days = list(range(1,366)), costs = [2,7,15]) == 187
   assert s.mincostTickets(days = [1,2,3,4,5,6,7,8,9,10,30,31], costs = [2,7,15]) == 17
