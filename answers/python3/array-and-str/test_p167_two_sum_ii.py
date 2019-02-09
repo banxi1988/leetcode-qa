@@ -22,22 +22,19 @@ __author__ = '代码会说话'
 """
 
 from typing import List
-import bisect
 class Solution:
   def twoSum(self, numbers:List[int], target:int) -> List[int]:
-    num_count = len(numbers)
-    for i in range(0, num_count):
-      num1 = numbers[i]
-      num2 = target - num1
-      if num2 < num1:
-        lo = 0
-        hi = i -1
+    i = 0
+    j = len(numbers) -1
+    while i < j:
+      sumij = numbers[i] + numbers[j]
+      if sumij == target:
+        return [i+1,j+1]
+      elif sumij < target:
+        i+=1
       else:
-        lo  = i +1
-        hi = num_count -1
-      index = bisect.bisect_left(numbers, num2, lo,hi)
-      if index != hi + 1 and numbers[index] == num2:
-        return [i + 1,index + 1]
+        j-=1
+
 
 
 
