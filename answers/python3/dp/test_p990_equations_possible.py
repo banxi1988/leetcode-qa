@@ -1,5 +1,4 @@
 # coding: utf-8
-from collections import defaultdict
 
 __author__ = '代码会说话'
 """
@@ -65,12 +64,21 @@ class Context:
 
 
 class Expr:
-  def __init__(self,lhs:str,rhs:str,eq:bool):
-    self.lhs = lhs
-    self.rhs = rhs
-    self.eq = eq
+  def __init__(self,expr:str):
+    self.source = expr
+    self.lhs = expr[0]
+    self.rhs = expr[-1]
+    self.eq = expr[1] == '='
     self.evaluated = False
 
+  def __str__(self):
+    return self.source+('!' if self.evaluated else '')
+
+  def __repr__(self):
+    return str(self)
+
+  def __hash__(self):
+    return hash(self.source)
 
 
   def eval(self,ctx:Context):
@@ -97,6 +105,8 @@ class Expr:
         value = ctx.alloc(self.lhs)
         ctx.set(self.rhs, value)
       else:
+        if self.lhs == self.rhs:
+          return False
         ctx.alloc(self.lhs)
         ctx.alloc(self.rhs)
 
@@ -104,34 +114,37 @@ class Expr:
 
   @classmethod
   def from_equation(cls,expr:str):
-    return Expr(lhs=expr[0], rhs=expr[-1], eq=expr[1] == "=")
+    return Expr(expr)
 
 
+from collections import defaultdict,deque
 class Solution:
   def equationsPossible(self, equations: 'List[str]') -> 'bool':
     ctx = Context()
     exprs = [Expr.from_equation(equation) for equation in equations]
-    var_to_exprs = defaultdict(list)
+    var_to_exprs = defaultdict(set)
     for expr in exprs:
-      var_to_exprs[expr.lhs].append(expr)
-      var_to_exprs[expr.rhs].append(expr)
+      if expr.eq:
+        var_to_exprs[expr.lhs].add(expr)
+        var_to_exprs[expr.rhs].add(expr)
     for expr in exprs:
-      related_exprs = [expr]
+      related_exprs = deque([expr])
       while related_exprs:
-        cur_expr = related_exprs.pop()
+        cur_expr = related_exprs.popleft()
         if cur_expr.evaluated:
           continue
         if not cur_expr.eval(ctx):
           return False
         cur_expr.evaluated = True
-        related_exprs.extend(var_to_exprs[cur_expr.lhs])
-        related_exprs.extend(var_to_exprs[cur_expr.rhs])
+        union_set = var_to_exprs[cur_expr.lhs] | var_to_exprs[cur_expr.rhs]
+        related_exprs.extend(union_set)
     return True
 
 
 def test():
   s = Solution()
   # 129 / 175 个通过测试用例
+  assert s.equationsPossible(["a!=i","g==k","k==j","k!=i","c!=e","a!=e","k!=a","a!=g","g!=c"]) == True
   assert s.equationsPossible(["e!=c","b!=b","b!=a","e==d"]) == False
   assert s.equationsPossible(["c==c","f!=a","f==b","b==c"]) == True
   assert s.equationsPossible(["a==b","b!=a"]) == False
