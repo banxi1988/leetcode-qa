@@ -3,6 +3,8 @@
 __author__ = '代码会说话'
 
 """
+1007. 行相等的最少多米诺旋转
+
 在一排多米诺骨牌中，A[i] 和 B[i] 分别代表第 i 个多米诺骨牌的上半部分和下半部分。（一个多米诺是两个从 1 到 6 的数字同列平铺形成的 —— 该平铺的每一半上都有一个数字。）
 
 我们可以旋转第 i 张多米诺，使得 A[i] 和 B[i] 的值交换。
@@ -29,7 +31,26 @@ __author__ = '代码会说话'
 解释：
 在这种情况下，不可能旋转多米诺牌使一行的值相等。
  
- [i,j,k,...]
+A = [2,1,2,4,2,2]
+B = [5,2,6,2,3,2]
+
+A:
+2:[0,2,4,5]
+1:[1]
+4:[3]
+
+A = [2,2,2,2,2,2]  -> 2
+B = [5,1,6,4,3,2]
+
+A = [5,1,6,4,3,2]  -> 3
+B = [2,2,2,2,2,2]
+
+
+A = [3,5,1,2,3]
+B = [3,6,3,3,4]
+
+3:[0,4]
+5:[1]
 
 提示：
 
@@ -39,53 +60,43 @@ __author__ = '代码会说话'
 
 from typing import List
 
-from collections import defaultdict
-
+from collections import Counter, defaultdict
 
 class Solution:
   def minDominoRotations(self, A: List[int], B: List[int]) -> int:
     a_num_to_indexes = defaultdict(list)
     for i, num in enumerate(A):
       a_num_to_indexes[num].append(i)
-
     b_num_to_indexes = defaultdict(list)
     for i, num in enumerate(B):
       b_num_to_indexes[num].append(i)
 
-    a_set = set(a_num_to_indexes.keys())
-    b_set = set(b_num_to_indexes.keys())
-    if len(a_set) == 1 or len(b_set) == 1:
-      return 0
+    def check_possible(t_num_to_indexes: defaultdict, s: List[int]):
+      t_nums = list(t_num_to_indexes.keys())
+      t_nums.sort(key=lambda num: len(t_num_to_indexes[num]), reverse=True)
+      for target in t_nums:
+        possible = True
+        rotate_count = 0
+        for num in t_nums:
+          if num == target:
+            continue
+          indexes = t_num_to_indexes[num]
+          if all(s[i] == target for i in indexes):
+            rotate_count += len(indexes)
+          else:
+            possible = False
+            break
+        if possible:
+          return rotate_count
 
     min_count = 20001
-    for num in a_set:
-      rot_count = 0
-      possible = True
-      for numo, indexes in a_num_to_indexes.items():
-        if numo == num:
-          continue
-        if all(B[i] == num for i in indexes):
-          rot_count += len(indexes)
-        else:
-          possible = False
-          break
-      if possible:
-        min_count = min(min_count, rot_count)
+    count1 = check_possible(a_num_to_indexes, B)
+    if count1 is not None:
+      min_count = min(min_count, count1)
 
-    for num in b_set:
-      rot_count = 0
-      possible = True
-      for numo, indexes in b_num_to_indexes.items():
-        if numo == num:
-          continue
-        if all(A[i] == num for i in indexes):
-          rot_count += len(indexes)
-        else:
-          possible = False
-          break
-      if possible:
-        min_count = min(min_count, rot_count)
-
+    count2 = check_possible(b_num_to_indexes, A)
+    if count2 is not None:
+      min_count = min(min_count, count2)
     if min_count < 20001:
       return min_count
     else:
@@ -95,5 +106,7 @@ class Solution:
 def test():
   s = Solution()
 
+  assert s.minDominoRotations(A=[1, 2, 1, 1, 1, 2, 2, 2], B=[2, 1, 2, 2, 2, 2, 2, 2]) == 1
   assert s.minDominoRotations(A=[2, 1, 2, 4, 2, 2], B=[5, 2, 6, 2, 3, 2]) == 2
   assert s.minDominoRotations(A=[3, 5, 1, 2, 3], B=[3, 6, 3, 3, 4]) == -1
+  assert s.minDominoRotations(A=[1, 1, 1], B=[1, 1, 1]) == 0
