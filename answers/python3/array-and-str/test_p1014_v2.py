@@ -3,6 +3,8 @@
 __author__ = '代码会说话'
 
 """
+1014. 在 D 天内送达包裹的能力
+
 传送带上的包裹必须在 D 天内从一个港口运送到另一个港口。
 
 传送带上的第 i 个包裹的重量为 weights[i]。每一天，我们都会按给出重量的顺序往传送带上装载包裹。我们装载的重量不会超过船的最大运载重量。
@@ -35,6 +37,11 @@ __author__ = '代码会说话'
 第 3 天：1, 4
 示例 3：
 
+weights = [3,2], D = 3
+min_load = max(weights) sum(weights)/D
+max_load = sum(weights)
+
+
 输入：weights = [1,2,3,1,1], D = 4
 输出：3
 解释：
@@ -55,36 +62,33 @@ from typing import List
 
 class Solution:
   def shipWithinDays(self, weights: List[int], D: int) -> int:
-    max_weight = sum(weights)
+    max_load = sum(weights)
     if D == 1:
-      return max_weight
-    min_weight = max(weights)
+      return max_load
     N = len(weights)
-    if D == N:
-      return min_weight
+    min_load = max(max(weights), max_load // D)
+    if D >= N:
+      return min_load
 
-    def can_ship(max_weight: int):
-      round_weight = 0
+    def can_ship(load: int):
       days = 1
+      round_weight = 0
       for weight in weights:
         round_weight += weight
-        if round_weight > max_weight:
+        if round_weight > load:
           days += 1
           round_weight = weight
           if days > D:
             return False
       return True
 
-    lo = min_weight
-    hi = max_weight
-    while lo <= hi:
-      mid = (lo + hi) // 2
+    while min_load <= max_load:
+      mid = (min_load + max_load) // 2
       if can_ship(mid):
-        hi = mid - 1
+        max_load = mid - 1
       else:
-        lo = mid + 1
-
-    return lo
+        min_load = mid + 1
+    return min_load
 
 
 def test():
