@@ -76,23 +76,14 @@ class Solution:
       return 1 if s == t else 0
     if NT == 1:
       return s.count(t)
-    df = [[0] * (NS) for _ in range(NT)]
-    t0ch = t[0]
-    for c, sch in enumerate(s):
-      if s[c] == t0ch:
-        if c > 0:
-          df[0][c] = df[0][c - 1] + 1
-        else:
-          df[0][c] = 1
-      else:
-        df[0][c] = df[0][c - 1]
+    df = [[0] * (NS + 1) for _ in range(NT + 1)]
+    for c in range(0, NS + 1):
+      df[0][c] = 1
 
-    for r, tch in enumerate(t):
-      if r == 0:
-        continue
-      for c, sch in enumerate(s):
-        if c == 0:
-          continue
+    for r in range(1, NT + 1):
+      tch = t[r - 1]
+      for c in range(r, NS + 1):
+        sch = s[c - 1]
         if sch == tch:
           df[r][c] = df[r - 1][c - 1] + df[r][c - 1]
         else:
