@@ -2,6 +2,8 @@
 
 __author__ = '代码会说话'
 """
+1018. 可被 5 整除的二进制前缀[4分]
+
 给定由若干 0 和 1 组成的数组 A。我们定义 N_i：从 A[0] 到 A[i] 的第 i 个子数组被解释为一个二进制数（从最高有效位到最低有效位）。
 
 返回布尔值列表 answer，只有当 N_i 可以被 5 整除时，答案 answer[i] 为 true，否则为 false。
@@ -15,6 +17,12 @@ __author__ = '代码会说话'
 解释：
 输入数字为 0, 01, 011；也就是十进制中的 0, 1, 3 。只有第一个数可以被 5 整除，因此 answer[0] 为真。
 示例 2：
+
+0,1, 1,1
+num = 0
+num = 0 << 1 + 1
+num = 3 = 1 << 1 + 1 = 3
+num = 7 = 3 << 1 + 1 = 7
 
 输入：[1,1,1]
 输出：[false,false,false]
@@ -32,6 +40,19 @@ __author__ = '代码会说话'
 
 1 <= A.length <= 30000
 A[i] 为 0 或 1
+
+N = 2 * n +  1
+(2*n + 1) % K = (2 * (2*n + 1) + 1) % K
+
+
+7 % 5 = 2
+
+7*2+1 = 15 % 5 = 0
+2*2 + 1 = 5 % 5 = 0
+
+8 % 5 = 3
+8* 2 + 1 = 17 % 5 = 2
+3 * 2 + 1 =  7 % 5 = 2
 """
 
 from typing import List
@@ -41,12 +62,14 @@ class Solution:
   def prefixesDivBy5(self, A: List[int]) -> List[bool]:
     # [0, 1, 1]
     num = 0
-    results = [False] * len(A)
-    for i, bit in enumerate(A):
+    ans = [0] * len(A)
+    for i,bit in enumerate(A):
       num <<= 1
       num += bit
-      results[i] = num % 5 == 0
-    return results
+      ans[i] = num % 5 == 0
+      num %= 5
+    return ans
+
 
 
 true = True
@@ -58,3 +81,4 @@ def test():
   assert s.prefixesDivBy5([0, 1, 1]) == [True, False, False]
   assert s.prefixesDivBy5([0, 1, 1, 1, 1, 1]) == [true, false, false, false, true, false]
   assert s.prefixesDivBy5([1, 1, 1, 0, 1]) == [false, false, false, false, false]
+  assert s.prefixesDivBy5([0,1,0,1,1,0,1,0,1,0,1,0,1,1,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,0,0,1,0,1,0])
