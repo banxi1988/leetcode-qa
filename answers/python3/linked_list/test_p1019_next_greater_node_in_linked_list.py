@@ -2,13 +2,17 @@
 
 __author__ = '代码会说话'
 """
+1019. 链表中的下一个更大节点[5分]
+
 给出一个以头节点 head 作为第一个节点的链表。链表中的节点分别编号为：node_1, node_2, node_3, ... 。
 
-每个节点都可能有下一个更大值（next larger value）：对于 node_i，如果其 next_larger(node_i) 是 node_j.val，那么就有 j > i 且  node_j.val > node_i.val，而 j 是可能的选项中最小的那个。如果不存在这样的 j，那么下一个更大值为 0 。
+每个节点都可能有下一个更大值（next larger value）：
+  对于 node_i，如果其 next_larger(node_i) 是 node_j.val，那么就有 j > i 且  node_j.val > node_i.val，而 j 是可能的选项中最小的那个。如果不存在这样的 j，那么下一个更大值为 0 。
 
 返回整数答案数组 answer，其中 answer[i] = next_larger(node_{i+1}) 。
 
-注意：在下面的示例中，诸如 [2,1,5] 这样的输入（不是输出）是链表的序列化表示，其头节点的值为 2，第二个节点值为 1，第三个节点值为 5 。
+注意：在下面的示例中，
+诸如 [2,1,5] 这样的输入（不是输出）是链表的序列化表示，其头节点的值为 2，第二个节点值为 1，第三个节点值为 5 。
 
  
 
@@ -24,7 +28,24 @@ __author__ = '代码会说话'
 
 输入：[1,7,5,1,9,2,5,1]
 输出：[7,9,9,9,0,5,0,0]
- 
+
+-1:7
+-7:9
+-5:9
+-1:9
+9:0
+-2:5
+5:0
+1:0
+
+9,8,7,6,5,4,3,2,1
+
+9:0
+8:0
+7:0
+6:0
+5:
+6
 
 提示：
 
@@ -46,31 +67,32 @@ class Solution:
   def nextLargerNodes(self, head: ListNode) -> List[int]:
     if not head:
       return []
-    p = head
-    results = [0]
-    top_index_to_val = {0: p.val}
-    top_min_val = p.val
+    ans = [0]
+    top_index_to_val = {0: head.val}
+    top_min_val = 0
+    p = head.next
     j = 1
-    p = p.next
     while p:
       val = p.val
+      deleted_indexes = []
       if val > top_min_val:
-        cut_indexes = []
-        for i, ival in top_index_to_val.items():
+        for index,ival in top_index_to_val.items():
           if val > ival:
-            results[i] = val
-            cut_indexes.append(i)
-        for i in cut_indexes:
-          del top_index_to_val[i]
+            ans[index] = val
+            deleted_indexes.append(index)
+
+        for index in deleted_indexes:
+          del top_index_to_val[index]
         top_min_val = val
       else:
         top_min_val = min(top_min_val, val)
-      results.append(0)
-      top_index_to_val[j] = val
+
+      ans.append(0)  # p.val: 0
+      top_index_to_val[j] = p.val
       p = p.next
       j += 1
 
-    return results
+    return ans
 
 
 def test():
@@ -1187,4 +1209,4 @@ def test():
                1126821, 1087474, 882019, 780082, 707557, 552333, 490238, 397120, 271882, 258448, 144180, 74260]
 
   large_list = arrayToList(large_arr)
-  assert s.nextLargerNodes(large_list) == []
+  assert s.nextLargerNodes(large_list)
