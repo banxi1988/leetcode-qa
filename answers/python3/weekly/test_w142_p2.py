@@ -74,7 +74,7 @@ class Car:
       self.empty_seats += trip.num_passengers
 
   def move_to(self,location:int):
-    for loc in range(self.location,location):
+    for loc in range(self.location,location+1):
       self.get_off_from(loc)
     self.location = location
     self.get_off_from(location)
