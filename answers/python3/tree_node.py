@@ -34,6 +34,9 @@ class TreeNode:
       return False
     return is_same_tree(self,other)
 
+  def __hash__(self):
+    return hash(id(self))
+
 
 class TreeNodeIterator:
   def __init__(self, tree: TreeNode):
