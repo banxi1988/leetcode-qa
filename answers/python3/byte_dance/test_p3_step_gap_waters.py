@@ -4,6 +4,8 @@ from typing import List
 __author__ = '代码会说话'
 
 """
+[字节跳动,头条笔试题][LeetCode 42]. 接雨水,积水问题
+
 有一组不同高度的台阶,由一个整数数组表示,数组中每个数是台阶的高度.
 当开始下雨了(水足够多),台阶之间的水坑会积多少水呢?
 
@@ -15,67 +17,41 @@ __author__ = '代码会说话'
 """
 
 class Solution:
-  def calc_waters_v1(self,arr:List[int]):
+  def trap_waters(self,arr:List[int]):
     N = len(arr)
-    i = 0
-    j = N -1
-    total = 0
-    prev_height = 0
+    if N <=2:
+      return 0
+    l = 0
+    r = N - 1
+    prev_h = 0
+    total_waters = 0
 
     def step_area(height:int):
-      size = 0
-      for step in arr[i+1:j]:
-        if step > prev_height:
-          h = min(step, height) - prev_height
-          size += h
-      return size
+      area = 0
+      for steph in arr[l+1: r]:
+          h = min(steph,height) - prev_h
+          if h > 0:
+            area += h
+      return area
 
-    while (j-i) > 1:
-      hi = arr[i]
-      hj = arr[j]
-      height = min(hj,hi)
-      if height > prev_height:
-        width = j -i -1
+    while (r - l) > 1:
+      lh = arr[l]
+      rh = arr[r]
+      if lh > prev_h and rh > prev_h:
+        width = r - l -1
         if width > 0:
-          area = width * (height -prev_height)
-          taked =  step_area(height)
-          gap = area - taked
-          if gap > 0:
-            total += gap
-            prev_height = height
-        i += 1
-        j -= 1
-      else:
-        if  hi <= prev_height:
-          i+=1
-        if hj <= prev_height:
-          j-=1
-    return total
-
-  def calc_waters(self,arr:List[int]):
-    N = len(arr)
-    if N <= 2:
-      return 0
-    total_volume = 0
-    j = N -1
-    max_l = arr[0]
-    max_r = 0
-    max_rs = [0] * N
-    while j > -1:
-      max_r = max(arr[j], max_r)
-      max_rs[j] = max_r
-      j -= 1
-
-    for i in range(1,N):
-      hi  = arr[i]
-      if hi > max_l:
-        max_l = hi
-
-      h = min(max_l, max_rs[i])
-      volume = max(h - hi, 0)
-      total_volume += volume
-    return total_volume
-
+          height = min(rh,lh)
+          volume = width * (height - prev_h)
+          taked = step_area(height)
+          waters = volume - taked
+          if waters > 0:
+            total_waters += waters
+          prev_h = height
+      if lh <= prev_h:
+        l += 1
+      if rh <= prev_h:
+        r -= 1
+    return total_waters
 
 
 
@@ -83,11 +59,14 @@ class Solution:
 
 def test():
   s = Solution()
-  assert s.calc_waters([0,1,0,2,1,0,1,3,2,1,2,1]) == 6
-  assert s.calc_waters([0,1,0,2]) == 1
-  assert s.calc_waters([0,1]) == 0
-  assert s.calc_waters([0,1,2]) == 0
-  assert s.calc_waters([0,1,2,1]) == 0
-  assert s.calc_waters([0,2,0,1]) == 1
-  assert s.calc_waters([0,1,0,2,1,0,1]) == 2
-  assert s.calc_waters([0,1,0,2,0,0,1]) == 3
+
+  assert s.trap_waters([6,4,2,0,3,2,0,3,1,4,5,3,2,7,5,3,0,1,2,1,3,4,6,8,1,3]) == 83
+
+  assert s.trap_waters([0,1,0,2,1,0,1,3,2,1,2,1]) == 6
+  assert s.trap_waters([0,1,0,2]) == 1
+  assert s.trap_waters([0,1]) == 0
+  assert s.trap_waters([0,1,2]) == 0
+  assert s.trap_waters([0,1,2,1]) == 0
+  assert s.trap_waters([0,2,0,1]) == 1
+  assert s.trap_waters([0,1,0,2,1,0,1]) == 2
+  assert s.trap_waters([0,1,0,2,0,0,1]) == 3
