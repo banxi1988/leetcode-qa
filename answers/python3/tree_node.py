@@ -666,6 +666,16 @@ class Codec:
 
     return root
 
+codec = Codec()
+def decode_tree(data:str):
+  return codec.deserialize(data)
+
+def encode_tree(root:Optional[TreeNode]):
+  return codec.serialize(root)
+
+
+
+
 def bst_insert_r(root:Optional[TreeNode], val:int) -> TreeNode:
   """ 二叉搜索树的递归插入操作 """
   if not root:
